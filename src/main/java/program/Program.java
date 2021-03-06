@@ -33,20 +33,25 @@ public class Program {
 //        renderer.squareFill(80, 40, 50, 0, 255, 0, 100);
 //        renderer.square(65, 65, 50, 5, 0, 0, 255, 100);
 //
-//        int r = 50;
-//        double d = rad * Math.PI / 180;
-//        double x2 = x + (r * Math.cos(d));
-//        double y2 = y + (r * Math.sin(d));
-//        renderer.line(x, y, (int)x2, (int)y2, 3, 255,255,255,100);
-//        rad--;
-//
+
 //        renderer.line(10,10, width - 10, 30, 5, 255,0,255,100);
 //
-////        renderer.circle(x, y, 50, 1, 255,255,0,150);
+//        renderer.circle(x, y, 50, 1, 255,255,0,150);
 //        renderer.circle(x, y, 40, 20, 0,255,255,130);
 //        renderer.circle(150, 150, 30,0,150,255,255);
 
-        renderer.triangle(70,50,150,100,50,100,3,255,255,255,255);
+//        renderer.triangleFill(80 - (int)x2,100 + (int)y2,150 + (int)x2,70 - (int)y2,100 - (int)x2,150 - (int)y2,255,255,255,150);
+
+        renderer.triangleFill(100,0,0,200,200,200,255,155,0,100);
+        renderer.circle(x, y, 100, 0,255,250,100);
+        renderer.squareFill(x, y, 150, 150,150, 150, 100);
+
+        int r = 50;
+        double d = rad * Math.PI / 180;
+        double x2 = (r * Math.cos(d));
+        double y2 = (r * Math.sin(d));
+        renderer.line(x, y, x +(int)x2, y + (int)y2, 3, 255,255,255,100);
+        rad++;
 
     }
 }
