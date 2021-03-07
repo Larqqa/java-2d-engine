@@ -59,7 +59,7 @@ public class Renderer {
     public void line(int x1, int y1, int x2, int y2, int width, int r, int g, int b, int a) {
         int minX = Math.min(x1, x2);
         int minY = Math.min(y1, y2);
-        int maxX = Math.max(x1, x2) + width + 1;
+        int maxX = Math.max(x1, x2) + width;
 
         boolean[] pixels = line.withWeight(x1 - minX, y1 - minY, x2 - minX, y2 - minY, width);
         draw(minX - width / 2, minY - 1, pixels, maxX - minX, r,g,b,a);
@@ -99,18 +99,28 @@ public class Renderer {
 
         int wd = maxX - minX;
 
-        boolean[] pixels = triangle.Fill(x1 - minX, y1 - minY, x2 - minX, y2 - minY, x3 - minX, y3 - minY);
+        boolean[] pixels = triangle.fill(x1 - minX, y1 - minY, x2 - minX, y2 - minY, x3 - minX, y3 - minY);
+        draw(minX, minY, pixels, wd, r,g,b,a);
+    }
+
+    public void rectangle(int x1, int y1, int x2, int y2, int x3, int y3,int x4, int y4, int r, int g, int b, int a) {
+        int maxX = Math.max(Math.max(Math.max(x1,x2),x3), x4) + 1;
+        int minX = Math.min(Math.min(Math.min(x1,x2),x3), x4);
+        int minY = Math.min(Math.min(Math.min(y1,y2), y3), y4);
+        int wd = maxX - minX;
+
+        boolean[] pixels = rectangle.fill(x1,y1, x2,y2, x3,y3, x4,y4);
         draw(minX, minY, pixels, wd, r,g,b,a);
     }
 
     public void rectangle(int x1, int y1, int x2, int y2, int x3, int y3,int x4, int y4, int size, int r, int g, int b, int a) {
-        int maxX = Math.max(Math.max(x1,x2), x3) + 1;
-        int minX = Math.min(Math.min(x1,x2), x3);
-        int minY = Math.min(Math.min(y1,y2), y3);
+        int maxX = Math.max(Math.max(Math.max(x1,x2),x3), x4) + size;
+        int minX = Math.min(Math.min(Math.min(x1,x2),x3), x4);
+        int minY = Math.min(Math.min(Math.min(y1,y2), y3), y4);
         int wd = maxX - minX;
 
-        boolean[] pixels = rectangle.noFill(x1, y1, x2,y2,x3,y3,x4,y4,size);
-        drawbg(minX, minY, pixels, wd, r,g,b,a);
+        boolean[] pixels = rectangle.noFill(x1,y1, x2,y2, x3,y3, x4,y4, size);
+        draw(minX, minY, pixels, wd, r,g,b,a);
     }
 
     public void draw( int x, int y, boolean[] pixels, int width, int r,int g, int b, int a) {

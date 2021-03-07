@@ -97,7 +97,7 @@ public class Line {
 
     // Bresenham with width, by drawing squares instead of pixels
     public boolean[] withWeight(int x1, int y1, int x2, int y2, int width) {
-        int maxX = Math.max(x1, x2) + width + 1;
+        int maxX = Math.max(x1, x2) + width;
         int maxY = Math.max(y1, y2) + width;
         boolean[] pixels = new boolean[maxX * maxY];
 

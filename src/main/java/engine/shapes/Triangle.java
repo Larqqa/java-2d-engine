@@ -34,7 +34,7 @@ public class Triangle {
     }
 
     // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
-    public boolean[] Fill(int x1, int y1, int x2, int y2, int x3, int y3) {
+    public boolean[] fill(int x1, int y1, int x2, int y2, int x3, int y3) {
         int minY = Math.min(Math.min(y1,y2), y3);
         int minX = Math.min(Math.min(x1,x2), x3);
 
