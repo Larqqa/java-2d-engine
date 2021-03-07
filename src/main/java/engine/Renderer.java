@@ -1,5 +1,7 @@
 package engine;
 
+import engine.shapes.*;
+import lombok.Getter;
 import program.Settings;
 import java.util.Arrays;
 
@@ -8,378 +10,129 @@ public class Renderer {
     private int height;
     private int[] pixels;
     private int clearColor;
+    private Square square;
+    private Line line;
+    private Circle circle;
+    private Triangle triangle;
+    private Rectangle rectangle;
 
     public Renderer(Settings settings, PixelCanvas canvas) {
         width = settings.getWidth();
         height = settings.getHeight();
         clearColor = settings.getClearColor();
         pixels = canvas.getPixels();
+
+        square = new Square(settings);
+        line = new Line(settings);
+        circle = new Circle(settings);
+        triangle = new Triangle(settings);
+        rectangle = new Rectangle(settings);
     }
 
     public void square(int x, int y, int size, int weight, int r, int g, int b, int a) {
         int half = size / 2;
-        x = x - half;
-        y = y - half;
+        x -= half;
+        y -= half;
 
-        for (int j = 0; j < size; j++) {
-            for (int i = 0; i < size; i++) {
-                if (y + j >= height || y + j < 0) continue;
-                if (x + i >= width || x + i < 0) continue;
-
-                if (j < weight || j > size - (1 + weight) || i < weight || i > size - (1 + weight)) {
-                    colorPixel(x + i, y + j, r, g, b, a);
-                }
-            }
-        }
+        boolean[] pixels = square.outline(x, y, size, weight);
+        draw(x, y, pixels, size, r,g,b,a);
     }
 
-    public void squareFill(int x, int y, int size, int r, int g, int b, int a) {
+    public void square(int x, int y, int size, int r, int g, int b, int a) {
         int half = size / 2;
-        x = x - half;
-        y = y - half;
+        x -= half;
+        y -= half;
 
-        for (int j = 0; j < size; j++) {
-            for (int i = 0; i < size; i++) {
-                if (y + j >= height || y + j < 0) continue;
-                if (x + i >= width || x + i < 0) continue;
-
-                colorPixel(x + i, y + j, r, g, b, a);
-            }
-        }
+        boolean[] pixels = square.fill(x, y, size);
+        draw(x, y, pixels, size, r,g,b,a);
     }
 
-
-    // Brasenham's line
-    // https://www.youtube.com/watch?v=IDFB5CDpLDE&t=164s
     public void line(int x1, int y1, int x2, int y2, int r, int g, int b, int a) {
-        int run = x2 - x1;
-        int rise = y2 - y1;
+        int minX = Math.min(x1, x2);
+        int minY = Math.min(y1, y2);
+        int maxX = Math.max(x1, x2) + 1;
 
-        if (run == 0) {
-            if (y2 < y1) {
-                int tempy = y1;
-                y1 = y2;
-                y2 = tempy;
-            }
-
-            for (int y = y1; y < y2; y++) {
-                colorPixel(x1, y, r, g, b, a);
-            }
-            return;
-        }
-
-        float m = (float) rise / run;
-        int adjust = m >= 0 ? 1 : -1;
-        float offset = 0;
-        double threshold = 0.5;
-        if (m <= 1 && m >= -1) {
-            float delta = Math.abs(m);
-            int y = y1;
-
-            if (x2 < x1) {
-                int tempx = x1;
-                x1 = x2;
-                x2 = tempx;
-                y = y2;
-            }
-
-            for (int x = x1; x < x2; x++) {
-                colorPixel(x, y, r, g, b, a);
-                offset += delta;
-
-                if (offset >= threshold) {
-                    y += adjust;
-                    threshold += 1;
-                }
-            }
-
-            return;
-        }
-
-        float delta = Math.abs((float) run / rise);
-        int x = x1;
-
-        if (y2 < y1) {
-            int tempy = y1;
-            y1 = y2;
-            y2 = tempy;
-
-            x = x2;
-        }
-
-        for (int y = y1; y < y2; y++) {
-            colorPixel(x, y, r, g, b, a);
-            offset += delta;
-
-            if (offset >= threshold) {
-                x += adjust;
-                threshold += 1;
-            }
-        }
+        boolean[] pixels = line.noWeight(x1 - minX, y1 - minY, x2 - minX, y2 - minY);
+        draw(minX, minY, pixels, maxX - minX, r,g,b,a);
     }
 
-    // Bresenham with width, by squares instead of pixels
     public void line(int x1, int y1, int x2, int y2, int width, int r, int g, int b, int a) {
-        int run = x2 - x1;
-        int rise = y2 - y1;
+        int minX = Math.min(x1, x2);
+        int minY = Math.min(y1, y2);
+        int maxX = Math.max(x1, x2) + width + 1;
 
-        if (run == 0) {
-            if (y2 < y1) {
-                int tempy = y1;
-                y1 = y2;
-                y2 = tempy;
-            }
-
-            for (int y = y1; y < y2; y++) {
-                squareFill(x1, y, width, r,g,b,a);
-            }
-            return;
-        }
-
-        float m = (float) rise / run;
-        int adjust = m >= 0 ? 1 : -1;
-        float offset = 0;
-        double threshold = 0.5;
-        if (m <= 1 && m >= -1) {
-            float delta = Math.abs(m);
-            int y = y1;
-
-            if (x2 < x1) {
-                int tempx = x1;
-                x1 = x2;
-                x2 = tempx;
-                y = y2;
-            }
-
-            for (int x = x1; x < x2; x++) {
-                squareFill(x, y, width, r,g,b,a);
-                offset += delta;
-
-                if (offset >= threshold) {
-                    y += adjust;
-                    threshold += 1;
-                }
-            }
-
-            return;
-        }
-
-        float delta = Math.abs((float) run / rise);
-        int x = x1;
-
-        if (y2 < y1) {
-            int tempy = y1;
-            y1 = y2;
-            y2 = tempy;
-
-            x = x2;
-        }
-
-        for (int y = y1; y < y2; y++) {
-            squareFill(x, y, width, r,g,b,a);
-            offset += delta;
-
-            if (offset >= threshold) {
-                x += adjust;
-                threshold += 1;
-            }
-        }
+        boolean[] pixels = line.withWeight(x1 - minX, y1 - minY, x2 - minX, y2 - minY, width);
+        draw(minX - width / 2, minY - 1, pixels, maxX - minX, r,g,b,a);
     }
 
-    private void xLine(int x1, int x2, int y, boolean[] pixels, int rad) {
-        while (x1 <= x2) {
-            pixels[y * (rad * 2) + x1++] = true;
-        }
-    }
-
-    private void yLine(int x, int y1, int y2, boolean[] pixels, int rad) {
-        while (y1 <= y2) {
-            pixels[y1++ * (rad * 2) + x] = true;
-        }
-    }
-
-    // https://stackoverflow.com/questions/27755514/circle-with-thickness-drawing-algorithm
     public void circle(int x1, int y1, int outerRadius, int innerRadius, int r, int g, int b, int a) {
-        innerRadius = innerRadius <= 0 ? outerRadius : innerRadius - 1;
-        innerRadius = outerRadius - innerRadius;
-
         x1 -= outerRadius;
         y1 -= outerRadius;
 
-        int circleWidth = (outerRadius) * 2;
-        boolean[] circlePixels = new boolean[circleWidth * circleWidth];
+        boolean[] pixels = circle.noFill(x1, y1, outerRadius, innerRadius);
+        draw(x1, y1, pixels, outerRadius * 2, r,g,b,a);
+    }
 
-        int xo = outerRadius - 1;
-        int xi = innerRadius - 1;
-        int y = 0;
-        int erro = 1 - xo;
-        int erri = 1 - xi;
+    public void circle(int x1, int y1, int radius, int r, int g, int b, int a) {
+        x1 -= radius;
+        y1 -= radius;
 
-        int cx = outerRadius;
-        int cy = outerRadius;
+        boolean[] pixels = circle.noFill(x1, y1, radius, radius);
+        draw(x1, y1, pixels, radius * 2, r,g,b,a);
+    }
 
-        while(xo >= y) {
-            xLine(cx + xi, cx + xo, cy + y, circlePixels, outerRadius);
-            yLine(cx + y, cy + xi, cy + xo, circlePixels, outerRadius);
+    public void triangle(int x1, int y1, int x2, int y2, int x3, int y3, int width, int r, int g, int b, int a) {
+        int maxX = Math.max(Math.max(x1,x2), x3) + width;
+        int minX = Math.min(Math.min(x1,x2), x3);
+        int minY = Math.min(Math.min(y1,y2), y3);
 
-            xLine(cx - xo, cx - xi, cy + y, circlePixels, outerRadius);
-            yLine(cx - y, cy + xi, cy + xo, circlePixels, outerRadius);
+        int wd = maxX - minX;
 
-            xLine(cx - xo, cx - xi, cy - y, circlePixels, outerRadius);
-            yLine(cx - y, cy - xo, cy - xi, circlePixels, outerRadius);
+        boolean[] pixels = triangle.noFill(x1 - minX, y1 - minY, x2 - minX, y2 - minY, x3 - minX, y3 - minY, width);
+        draw(minX, minY, pixels, wd, r,g,b,a);
+    }
 
-            xLine(cx + xi, cx + xo, cy - y, circlePixels, outerRadius);
-            yLine(cx + y, cy - xo, cy - xi, circlePixels, outerRadius);
+    public void triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b, int a) {
+        int maxX = Math.max(Math.max(x1,x2), x3) + 1;
+        int minX = Math.min(Math.min(x1,x2), x3);
+        int minY = Math.min(Math.min(y1,y2), y3);
 
-            y++;
+        int wd = maxX - minX;
 
-            if (erro < outerRadius) {
-                erro += 2 * (y + 1);
-            } else {
-                xo--;
-                erro += 2 * (y - xo + 1);
-            }
+        boolean[] pixels = triangle.Fill(x1 - minX, y1 - minY, x2 - minX, y2 - minY, x3 - minX, y3 - minY);
+        draw(minX, minY, pixels, wd, r,g,b,a);
+    }
 
-            if (y > innerRadius) {
-                xi = y;
-            } else {
-                if (erri < 0) {
-                    erri += 2 * y + 1;
-                } else {
-                    xi--;
-                    erri += 2 * (y - xi + 1);
-                }
-            }
-        }
+    public void rectangle(int x1, int y1, int x2, int y2, int x3, int y3,int x4, int y4, int size, int r, int g, int b, int a) {
+        int maxX = Math.max(Math.max(x1,x2), x3) + 1;
+        int minX = Math.min(Math.min(x1,x2), x3);
+        int minY = Math.min(Math.min(y1,y2), y3);
+        int wd = maxX - minX;
 
-        for (int i = 0; i < circlePixels.length; i++) {
-            if (circlePixels[i]) {
-                cx = x1 + (i % circleWidth);
-                cy = y1 + (i / circleWidth);
+        boolean[] pixels = rectangle.noFill(x1, y1, x2,y2,x3,y3,x4,y4,size);
+        drawbg(minX, minY, pixels, wd, r,g,b,a);
+    }
+
+    public void draw( int x, int y, boolean[] pixels, int width, int r,int g, int b, int a) {
+        for (int i = 0; i < pixels.length; i++) {
+            int cx = x + (i % width);
+            int cy = y + (i / width);
+
+            if (pixels[i]) {
                 colorPixel(cx, cy, r, g, b, a);
             }
         }
     }
 
-    public void circle(int x1, int y1, int radius, int r, int g, int b, int a) {
-        circle(x1, y1, radius, radius, r, g, b, a);
-    }
+    public void drawbg( int x, int y, boolean[] pixels, int width, int r,int g, int b, int a) {
+        for (int i = 0; i < pixels.length; i++) {
+            int cx = x + (i % width);
+            int cy = y + (i / width);
 
-    public void triangle(int x1, int y1, int x2, int y2, int x3, int y3, int width, int r, int g, int b, int a) {
-        line(x1,y1,x2,y2,width, r,g,b,a);
-        line(x2,y2,x3,y3,width,r,g,b,a);
-        line(x3,y3,x1,y1,width,r,g,b,a);
-    }
+            colorPixel(cx, cy, 0,0,0,150);
 
-    // Lines, but drawn in to a boolean array
-    private void triLines(int x1, int y1, int x2, int y2, boolean[] triPixels, int wd) {
-        int run = x2 - x1;
-        int rise = y2 - y1;
-
-        if (run == 0) {
-            if (y2 < y1) {
-                int tempy = y1;
-                y1 = y2;
-                y2 = tempy;
-            }
-
-            for (int y = y1; y < y2; y++) {
-                triPixels[y * wd + x1] = true;
-            }
-            return;
-        }
-
-        float m = (float) rise / run;
-        int adjust = m >= 0 ? 1 : -1;
-        float offset = 0;
-        double threshold = 0.5;
-        if (m <= 1 && m >= -1) {
-            float delta = Math.abs(m);
-            int y = y1;
-
-            if (x2 < x1) {
-                int tempx = x1;
-                x1 = x2;
-                x2 = tempx;
-                y = y2;
-            }
-
-            for (int x = x1; x < x2; x++) {
-                triPixels[y * wd + x] = true;
-
-                offset += delta;
-
-                if (offset >= threshold) {
-                    y += adjust;
-                    threshold += 1;
-                }
-            }
-
-            return;
-        }
-
-        float delta = Math.abs((float) run / rise);
-        int x = x1;
-
-        if (y2 < y1) {
-            int tempy = y1;
-            y1 = y2;
-            y2 = tempy;
-            x = x2;
-        }
-
-        for (int y = y1; y < y2; y++) {
-            triPixels[y * wd + x] = true;
-            offset += delta;
-
-            if (offset >= threshold) {
-                x += adjust;
-                threshold += 1;
-            }
-        }
-    }
-
-    // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
-    public void triangleFill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b, int a) {
-        int maxX = Math.max(Math.max(x1,x2), x3) + 1;
-        int minX = Math.min(Math.min(x1,x2), x3);
-
-        int maxY = Math.max(Math.max(y1,y2), y3)  + 1;
-        int minY = Math.min(Math.min(y1,y2), y3);
-
-        int wd = maxX - minX;
-        int hg = maxY - minY;
-
-        boolean[] triPix = new boolean[wd * hg];
-        triLines(x1 - minX,y1 - minY,x2 - minX,y2 - minY,triPix,wd);
-        triLines(x2 - minX,y2 - minY,x3 - minX,y3 - minY,triPix,wd);
-        triLines(x3 - minX,y3 - minY,x1 - minX,y1 - minY,triPix,wd);
-
-        int vsx1 = x2 - x1;
-        int vsy1 = y2 - y1;
-
-        int vsx2 = x3 - x1;
-        int vsy2 = y3 - y1;
-
-        for (int y = minY; y < maxY; y++)  {
-            for (int x = minX; x < maxX; x++) {
-                int vsx3 = x - x1;
-                int vsy3 = y - y1;
-
-                float s = (float)(vsx3 * vsy2 - vsy3 * vsx2) / (float)(vsx1 * vsy2 - vsy1 * vsx2);
-                float t = (float)(vsx1 * vsy3 - vsy1 * vsx3) / (float)(vsx1 * vsy2 - vsy1 * vsx2);
-
-                if ((s >= 0) && (t >= 0) && (s + t <= 1)) {
-                    triPix[(y - minY) * wd + (x - minX)] = true;
-                }
-            }
-        }
-
-        for (int i = 0; i < triPix.length; i++) {
-            int cx = (i % wd);
-            int cy = (i / wd);
-            if (triPix[cy * wd + cx]) {
-                colorPixel(cx + minX, cy + minY, r, g, b, a);
+            if (pixels[i]) {
+                colorPixel(cx, cy, r, g, b, a);
             }
         }
     }
