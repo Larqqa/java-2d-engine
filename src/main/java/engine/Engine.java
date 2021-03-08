@@ -51,9 +51,9 @@ public class Engine {
             while(unprocessedTime >= frameCap && unprocessedTime != 0) {
                 unprocessedTime -= frameCap;
                 shouldRender = true;
+                program.update();
             }
 
-            program.update(frames);
 
             if (frameTime >= 1.0) {
                 frameTime -= frameTime;

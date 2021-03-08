@@ -3,41 +3,37 @@ package engine.shapes;
 import program.Settings;
 
 public class Circle {
-    private int width;
-    private int height;
-
-    public Circle(Settings settings) {
-        width = settings.getWidth();
-        height = settings.getHeight();
-    }
+    public Circle() { }
 
     private void xLine(int x1, int x2, int y, boolean[] pixels, int rad) {
         while (x1 <= x2) {
-            pixels[y * (rad * 2) + x1++] = true;
+            pixels[y * (rad * 2) + x1] = true;
+            x1++;
         }
     }
 
     private void yLine(int x, int y1, int y2, boolean[] pixels, int rad) {
         while (y1 <= y2) {
-            pixels[y1++ * (rad * 2) + x] = true;
+            pixels[y1 * (rad * 2) + x] = true;
+            y1++;
         }
     }
 
-    public boolean[] noFill(int x1, int y1, int outerRadius, int innerRadius) {
-        innerRadius = innerRadius <= 0 ? outerRadius : innerRadius - 1;
+    public boolean[] draw(int outerRadius, int innerRadius) {
+        innerRadius = innerRadius <= 0 ? outerRadius : innerRadius;
         innerRadius = outerRadius - innerRadius;
 
-        int circleWidth = (outerRadius) * 2;
+        int circleWidth = outerRadius * 2;
         boolean[] pixels = new boolean[circleWidth * circleWidth];
 
         int xo = outerRadius - 1;
-        int xi = innerRadius - 1;
+        int xi = innerRadius;
         int y = 0;
-        int erro = 1 - xo;
-        int erri = 1 - xi;
+        int erro = xo;
+        int erri = xi;
 
-        int cx = outerRadius;
-        int cy = outerRadius;
+        int cx = outerRadius - 1;
+        int cy = outerRadius - 1;
 
         while(xo >= y) {
             xLine(cx + xi, cx + xo, cy + y, pixels, outerRadius);
@@ -65,7 +61,7 @@ public class Circle {
                 xi = y;
             } else {
                 if (erri < 0) {
-                    erri += 2 * y + 1;
+                    erri += 2 * (y + 1);
                 } else {
                     xi--;
                     erri += 2 * (y - xi + 1);

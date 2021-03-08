@@ -5,23 +5,17 @@ import program.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
-import java.util.Arrays;
 
 public class Window extends JFrame {
     @Getter final private JFrame frame;
     @Getter final private PixelCanvas canvas;
-    private final int width;
-    private final int height;
-    private final double scale;
-    private final Insets insets;
     private final int scaledWidth;
     private final int scaledHeight;
 
     Window(Settings settings) {
-        width = settings.getWidth();
-        height = settings.getHeight();
-        scale = settings.getScale();
+        int width = settings.getWidth();
+        int height = settings.getHeight();
+        double scale = settings.getScale();
 
         frame = new JFrame(settings.getTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,7 +28,7 @@ public class Window extends JFrame {
         frame.setVisible(true);
         frame.requestFocus();
 
-        insets = frame.getInsets();
+        Insets insets = frame.getInsets();
         scaledWidth = insets.left + insets.right + (int)(width * scale);
         scaledHeight = insets.left + insets.right + ((int)(height * scale) + (insets.top - 1));
         refreshSize();

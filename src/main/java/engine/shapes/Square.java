@@ -3,24 +3,16 @@ package engine.shapes;
 import program.Settings;
 
 public class Square {
-    private int width;
-    private int height;
+    public Square() { }
 
-    public Square(Settings settings) {
-        width = settings.getWidth();
-        height = settings.getHeight();
-    }
-
-    public boolean[] outline(int x, int y, int size, int weight) {
+    public boolean[] outline(int size, int weight) {
         boolean[] pixels = new boolean[size * size];
 
-        for (int j = 0; j < size; j++) {
-            for (int i = 0; i < size; i++) {
-                if (y + j >= height || y + j < 0) continue;
-                if (x + i >= width || x + i < 0) continue;
-
-                if (j < weight || j > size - (1 + weight) || i < weight || i > size - (1 + weight)) {
-                    pixels[j * size + i] = true;
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (y < weight || y > size - (1 + weight) ||
+                    x < weight || x > size - (1 + weight)) {
+                    pixels[y * size + x] = true;
                 }
             }
         }
@@ -28,14 +20,12 @@ public class Square {
         return pixels;
     }
 
-    public boolean[] fill(int x, int y, int size) {
+    public boolean[] fill(int size) {
         boolean[] pixels = new boolean[size * size];
 
-        for (int j = 0; j < size; j++) {
-            for (int i = 0; i < size; i++) {
-                if (y + j >= height || y + j < 0) continue;
-                if (x + i >= width || x + i < 0) continue;
-                pixels[j * size + i] = true;
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                pixels[y * size + x] = true;
             }
         }
 

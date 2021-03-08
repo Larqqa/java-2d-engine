@@ -3,22 +3,21 @@ package engine.shapes;
 import program.Settings;
 
 public class Triangle {
-    private int width;
-    private int height;
-    private Line line;
-
-
-    public Triangle(Settings settings) {
-        width = settings.getWidth();
-        height = settings.getHeight();
-
-        line = new Line(settings);
-    }
+    public Triangle() { }
 
     public boolean[] noFill(int x1, int y1, int x2, int y2, int x3, int y3, int width) {
         int minY = Math.min(Math.min(y1,y2), y3);
         int minX = Math.min(Math.min(x1,x2), x3);
 
+        x1 -= minX;
+        y1 -= minY;
+        x2 -= minX;
+        y2 -= minY;
+        x3 -= minX;
+        y3 -= minY;
+
+        minX = Math.min(Math.min(x1,x2), x3);
+        minY = Math.min(Math.min(y1,y2), y3);
         int maxX = Math.max(Math.max(x1,x2), x3) + width;
         int maxY = Math.max(Math.max(y1,y2), y3) + width;
 
@@ -37,6 +36,16 @@ public class Triangle {
     public boolean[] fill(int x1, int y1, int x2, int y2, int x3, int y3) {
         int minY = Math.min(Math.min(y1,y2), y3);
         int minX = Math.min(Math.min(x1,x2), x3);
+
+        x1 -= minX;
+        y1 -= minY;
+        x2 -= minX;
+        y2 -= minY;
+        x3 -= minX;
+        y3 -= minY;
+
+        minX = Math.min(Math.min(x1,x2), x3);
+        minY = Math.min(Math.min(y1,y2), y3);
 
         int maxX = Math.max(Math.max(x1,x2), x3) + 1;
         int maxY = Math.max(Math.max(y1,y2), y3) + 1;
@@ -73,6 +82,11 @@ public class Triangle {
     }
 
     private void square(int x, int y, int size, boolean[] pixels, int wd) {
+        if (size <= 1) {
+            pixels[y * wd + x] = true;
+            return;
+        }
+
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
                 pixels[(y + j) * wd + (x + i)] = true;
