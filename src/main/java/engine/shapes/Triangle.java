@@ -23,9 +23,9 @@ public class Triangle {
         int hg = maxY - minY;
         boolean[] triPix = new boolean[wd * hg];
 
-        triLines(x1,y1,x2,y2, triPix, wd, width);
-        triLines(x2,y2,x3,y3, triPix, wd, width);
-        triLines(x3,y3,x1,y1, triPix, wd, width);
+        triLines(x1,y1,x2,y2, triPix, wd,hg, width);
+        triLines(x2,y2,x3,y3, triPix, wd,hg, width);
+        triLines(x3,y3,x1,y1, triPix, wd,hg, width);
 
         return triPix;
     }
@@ -45,16 +45,16 @@ public class Triangle {
         minX = Math.min(Math.min(x1,x2), x3);
         minY = Math.min(Math.min(y1,y2), y3);
 
-        int maxX = Math.max(Math.max(x1,x2), x3) + 1;
-        int maxY = Math.max(Math.max(y1,y2), y3) + 1;
+        int maxX = Math.max(Math.max(x1,x2), x3);
+        int maxY = Math.max(Math.max(y1,y2), y3);
 
         int wd = maxX - minX;
         int hg = maxY - minY;
         boolean[] triPix = new boolean[wd * hg];
 
-        triLines(x1,y1,x2,y2, triPix, wd, 1);
-        triLines(x2,y2,x3,y3, triPix, wd, 1);
-        triLines(x3,y3,x1,y1, triPix, wd, 1);
+        triLines(x1,y1,x2,y2, triPix, wd,hg, 1);
+        triLines(x2,y2,x3,y3, triPix, wd,hg, 1);
+        triLines(x3,y3,x1,y1, triPix, wd,hg, 1);
 
         int vsx1 = x2 - x1;
         int vsy1 = y2 - y1;
@@ -79,21 +79,28 @@ public class Triangle {
         return triPix;
     }
 
-    private void square(int x, int y, int size, boolean[] pixels, int wd) {
+    private void square(int x, int y, int size, boolean[] pixels, int wd, int hg) {
         if (size <= 1) {
-            pixels[y * wd + x] = true;
+            if (x < wd && y < hg) {
+                pixels[y * wd + x] = true;
+            }
             return;
         }
 
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
-                pixels[(y + j) * wd + (x + i)] = true;
+                int cx =  i + x;
+                int cy = j + y;
+
+                if (cx < wd && cy < hg) {
+                    pixels[(y + j) * wd + (x + i)] = true;
+                }
             }
         }
     }
 
     // Bresenhams lines
-    private void triLines(int x1, int y1, int x2, int y2, boolean[] triPixels, int wd, int size) {
+    private void triLines(int x1, int y1, int x2, int y2, boolean[] triPixels, int wd, int hg, int size) {
         int run = x2 - x1;
         int rise = y2 - y1;
 
@@ -105,7 +112,7 @@ public class Triangle {
             }
 
             for (int y = y1; y < y2; y++) {
-                square(x1, y, size, triPixels, wd);
+                square(x1, y, size, triPixels, wd, hg);
             }
             return;
         }
@@ -126,7 +133,7 @@ public class Triangle {
             }
 
             for (int x = x1; x < x2; x++) {
-                square(x, y, size, triPixels, wd);
+                square(x, y, size, triPixels, wd, hg);
 
                 offset += delta;
 
@@ -150,7 +157,7 @@ public class Triangle {
         }
 
         for (int y = y1; y < y2; y++) {
-            square(x, y, size, triPixels, wd);
+            square(x, y, size, triPixels, wd, hg);
             offset += delta;
 
             if (offset >= threshold) {

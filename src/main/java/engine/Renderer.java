@@ -12,7 +12,6 @@ public class Renderer {
     private final Circle circle;
     private final Triangle triangle;
     private final Rectangle rectangle;
-    private final Pixel pixel;
 
     public Renderer() {
         square = new Square();
@@ -20,7 +19,6 @@ public class Renderer {
         circle = new Circle();
         triangle = new Triangle();
         rectangle = new Rectangle();
-        pixel = new Pixel(pixels);
     }
 
     public void square(int x, int y, int size, int weight, int r, int g, int b, int a) {
@@ -32,7 +30,7 @@ public class Renderer {
         y -= halfSize + halfWeight;
 
         boolean[] pixels = square.outline(newSize, weight);
-        draw(x, y, pixels, newSize, r,g,b,a);
+        drawbg(x, y, pixels, newSize, r,g,b,a);
     }
 
     public void square(int x, int y, int size, int r, int g, int b, int a) {
@@ -59,7 +57,7 @@ public class Renderer {
         int maxX = Math.max(x1, x2) + width;
 
         boolean[] pixels = line.draw(x1, y1, x2, y2, width);
-        draw(minX - width / 2, minY - 1, pixels, maxX - minX, r,g,b,a);
+        draw(minX - width / 2, minY - width / 2, pixels, maxX - minX, r,g,b,a);
     }
 
     public void circle(int x, int y, int outerRadius, int innerRadius, int r, int g, int b, int a) {
@@ -85,21 +83,21 @@ public class Renderer {
         int wd = maxX - minX;
 
         boolean[] pixels = triangle.noFill(x1, y1, x2, y2, x3, y3, width);
-        draw(minX - width / 2, minY - width / 2, pixels, wd, r,g,b,a);
+        drawbg(minX - width / 2, minY - width / 2, pixels, wd, r,g,b,a);
     }
 
     public void triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b, int a) {
-        int maxX = Math.max(Math.max(x1,x2), x3) + 1;
+        int maxX = Math.max(Math.max(x1,x2), x3);
         int minX = Math.min(Math.min(x1,x2), x3);
         int minY = Math.min(Math.min(y1,y2), y3);
         int wd = maxX - minX;
 
         boolean[] pixels = triangle.fill(x1, y1, x2, y2, x3, y3);
-        draw(minX, minY, pixels, wd, r,g,b,a);
+        drawbg(minX, minY, pixels, wd, r,g,b,a);
     }
 
     public void rectangle(int x1, int y1, int x2, int y2, int x3, int y3,int x4, int y4, int r, int g, int b, int a) {
-        int maxX = Math.max(Math.max(Math.max(x1,x2),x3), x4) + 1;
+        int maxX = Math.max(Math.max(Math.max(x1,x2),x3), x4);
         int minX = Math.min(Math.min(Math.min(x1,x2),x3), x4);
         int minY = Math.min(Math.min(Math.min(y1,y2), y3), y4);
         int wd = maxX - minX;
@@ -124,7 +122,7 @@ public class Renderer {
             int cy = y + (i / width);
 
             if (pixels[i]) {
-                pixel.colorPixel(cx, cy, r, g, b, a);
+                colorPixel(cx, cy, r, g, b, a);
             }
         }
     }
@@ -134,10 +132,10 @@ public class Renderer {
             int cx = x + (i % width);
             int cy = y + (i / width);
 
-            pixel.colorPixel(cx, cy, 0,0,0,150);
+            colorPixel(cx, cy, 0,0,0,150);
 
             if (pixels[i]) {
-                pixel.colorPixel(cx, cy, r, g, b, a);
+                colorPixel(cx, cy, r, g, b, a);
             }
         }
     }
@@ -153,16 +151,48 @@ public class Renderer {
                 int g = (int)(255 * (double)(Program.height - y) / Program.height);
                 int b = (int)(255 * 0.25);
 
-                pixel.colorPixel(x, y, r, g, b);
+                colorPixel(x, y, r, g, b);
             }
         }
     }
 
     public void colorPixel(int x, int y, int r, int g, int b) {
-        pixel.colorPixel(x,y,r,g,b);
+        if (x < 0 || y < 0) return;
+        if (x >= Program.width || y >= Program.height) return;
+
+        pixels[y * Program.width + x] =
+                0xFF000000 |
+                        (r << 16) & 0x00FF0000 |
+                        (g << 8)  & 0x0000FF00 |
+                        b        & 0x000000FF;
     }
 
+    // https://en.wikipedia.org/wiki/Alpha_compositing#Alpha_blending
     public void colorPixel(int x, int y, int r, int g, int b, int a) {
-        pixel.colorPixel(x,y,r,g,b,a);
+        if (x < 0 || y < 0 || x >= Program.width || y >= Program.height) return;
+
+        double aa = a / 255.0;
+        double ra = r / 255.0;
+        double ga = g / 255.0;
+        double ba = b / 255.0;
+
+        int pixel = pixels[y * Program.width + x];
+        double ab = ((pixel >> 24) & 0xFF) / 255.0;
+        double rb = ((pixel >> 16) & 0xFF) / 255.0;
+        double gb = ((pixel >> 8)  & 0xFF) / 255.0;
+        double bb = ((pixel)       & 0xFF) / 255.0;
+
+        double ac = (ab * (1 - aa));
+        double ao = aa + ac;
+
+        double ro = (ra * aa + rb * ac) / ao;
+        double go = (ga * aa + gb * ac) / ao;
+        double bo = (ba * aa + bb * ac) / ao;
+
+        pixels[y * Program.width + x] =
+                ((int) (255 * ao) << 24) & 0xFF000000 |
+                        ((int) (255 * ro) << 16) & 0x00FF0000 |
+                        ((int) (255 * go) << 8)  & 0x0000FF00 |
+                        (int) (255 * bo)         & 0x000000FF;
     }
 }

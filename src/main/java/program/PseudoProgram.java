@@ -8,6 +8,7 @@ public class PseudoProgram extends Program {
     public PseudoProgram() {
         Program.setTitle("yeet");
         Program.setWidth(300);
+//        Program.setScale(1.0);
 
         start();
     }
@@ -19,7 +20,7 @@ public class PseudoProgram extends Program {
     @Override
     public void render(){
         renderer.clear();
-        renderer.test();
+//        renderer.test();
 
         int x = 100;
         int y = 100;
@@ -64,19 +65,36 @@ public class PseudoProgram extends Program {
 //                x - 25 - (int)x2,y - 25 - (int)y2,
 //                3,255,255,255,100);
 
-            renderer.rectangle(
-                50,50,150,50,
-                150,150,50,150,
-                255,255,255,100);
+//
+//        renderer.triangle(
+//                50,50,
+//                150,50,
+//                150,150,
+//                10,255,0,0,100);
+
         renderer.rectangle(
                 50,50,150,50,
                 150,150,50,150,
+                255,255,0,100);
+
+        renderer.rectangle(
+                100,100,50,50,
+                150,50,150,100,
                 10,255,255,255,100);
 
-        renderer.triangle(
-                50,50,
-                150,50,
-                150,150,
-                10,255,0,0,100);
+//        renderer.line(
+//                50,50,
+//                50,150,
+//                10,255,255,100);
+//
+
+//        renderer.triangle(
+//                45,45,
+//                155,45,
+//                155,155,
+//                255,0,0,100);
+
+//        renderer.square(x, y, 100, 0,255, 150, 255);
+
     }
 }
