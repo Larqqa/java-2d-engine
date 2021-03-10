@@ -1,24 +1,22 @@
 package program;
 
-import lombok.Getter;
-import engine.Renderer;
-import engine.PixelCanvas;
+import engine.Program;
 
-public class Program {
-    private final int width;
-    private final int height;
-    private final Renderer renderer;
+public class PseudoProgram extends Program {
     private int rad = 0;
 
-    public Program(Settings settings, PixelCanvas canvas) {
-        width = settings.getWidth();
-        height = settings.getHeight();
-        renderer = new Renderer(settings, canvas);
+    public PseudoProgram() {
+        Program.setTitle("yeet");
+        Program.setWidth(300);
+
+        start();
     }
 
+    @Override
     public void update() {
     }
 
+    @Override
     public void render(){
         renderer.clear();
         renderer.test();

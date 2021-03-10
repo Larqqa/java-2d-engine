@@ -1,7 +1,5 @@
 package engine.shapes;
 
-import program.Settings;
-
 public class Line {
     public Line() { }
 

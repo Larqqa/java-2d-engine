@@ -1,21 +1,17 @@
 package engine;
 
-import lombok.Getter;
-import program.Settings;
-import program.Program;
-
 public class Engine {
-    private final double frameCap;
     private boolean started = false;
     private final PixelCanvas canvas;
     private final Window window;
     private final Program program;
 
-    public Engine(Settings settings) {
-        frameCap = settings.getFrameCap();
-        window = new Window(settings);
+    public Engine(Program program) {
+        window = new Window();
         canvas = window.getCanvas();
-        program = new Program(settings, canvas);
+
+        this.program = program;
+        program.renderer.setPixels(canvas.getPixels());
     }
 
     public void start() {
@@ -48,8 +44,8 @@ public class Engine {
             frameTime += elapsedTime;
             shouldRender = false;
 
-            while(unprocessedTime >= frameCap && unprocessedTime != 0) {
-                unprocessedTime -= frameCap;
+            while(unprocessedTime >= Program.frameCap && unprocessedTime != 0) {
+                unprocessedTime -= Program.frameCap;
                 shouldRender = true;
                 program.update();
             }

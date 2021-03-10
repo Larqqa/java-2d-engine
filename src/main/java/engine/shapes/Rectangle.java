@@ -1,17 +1,12 @@
 package engine.shapes;
 
-import program.Settings;
+import engine.Program;
 
 public class Rectangle {
-    int width;
-    int height;
     Triangle triangle;
     Line line;
 
-    public Rectangle(Settings settings) {
-        width = settings.getWidth();
-        height = settings.getHeight();
-
+    public Rectangle() {
         triangle = new Triangle();
         line = new Line();
     }
@@ -77,7 +72,7 @@ public class Rectangle {
         int y = minY - minYo;
 
         boolean[] second = triangle.fill(x1,y1,x2,y2,x3,y3);
-        width = maxX - minX;
+        int width = maxX - minX;
         for (int i = 0; i < second.length; i++) {
             int cx = i % width;
             int cy = i / width;

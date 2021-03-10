@@ -1,32 +1,26 @@
 package engine;
 
 import engine.shapes.*;
-import lombok.Getter;
-import program.Settings;
+import lombok.Setter;
+
 import java.util.Arrays;
 
 public class Renderer {
-    private final int width;
-    private final int height;
-    private final int[] pixels;
-    private final int clearColor;
+    @Setter private int[] pixels;
     private final Square square;
     private final Line line;
     private final Circle circle;
     private final Triangle triangle;
     private final Rectangle rectangle;
+    private final Pixel pixel;
 
-    public Renderer(Settings settings, PixelCanvas canvas) {
-        width = settings.getWidth();
-        height = settings.getHeight();
-        clearColor = settings.getClearColor();
-        pixels = canvas.getPixels();
-
+    public Renderer() {
         square = new Square();
         line = new Line();
         circle = new Circle();
         triangle = new Triangle();
-        rectangle = new Rectangle(settings);
+        rectangle = new Rectangle();
+        pixel = new Pixel(pixels);
     }
 
     public void square(int x, int y, int size, int weight, int r, int g, int b, int a) {
@@ -130,7 +124,7 @@ public class Renderer {
             int cy = y + (i / width);
 
             if (pixels[i]) {
-                colorPixel(cx, cy, r, g, b, a);
+                pixel.colorPixel(cx, cy, r, g, b, a);
             }
         }
     }
@@ -140,68 +134,35 @@ public class Renderer {
             int cx = x + (i % width);
             int cy = y + (i / width);
 
-            colorPixel(cx, cy, 0,0,0,150);
+            pixel.colorPixel(cx, cy, 0,0,0,150);
 
             if (pixels[i]) {
-                colorPixel(cx, cy, r, g, b, a);
+                pixel.colorPixel(cx, cy, r, g, b, a);
             }
         }
     }
 
     public void clear() {
-        Arrays.fill(pixels, clearColor);
+        Arrays.fill(pixels, Program.clearColor);
     }
 
     public void test(){
-        for(int y = 0; y < height; y++) {
-            for(int x = 0; x < width; x++) {
-                int r = (int)(255 * (double)x / width);
-                int g = (int)(255 * (double)(height - y) / height);
+        for(int y = 0; y < Program.height; y++) {
+            for(int x = 0; x < Program.width; x++) {
+                int r = (int)(255 * (double)x / Program.width);
+                int g = (int)(255 * (double)(Program.height - y) / Program.height);
                 int b = (int)(255 * 0.25);
 
-                colorPixel(x, y, r, g, b);
+                pixel.colorPixel(x, y, r, g, b);
             }
         }
     }
 
     public void colorPixel(int x, int y, int r, int g, int b) {
-        if (x < 0 || y < 0) return;
-        if (x >= width || y >= height) return;
-
-        pixels[y * width + x] =
-                        0xFF000000 |
-            (r << 16) & 0x00FF0000 |
-            (g << 8)  & 0x0000FF00 |
-             b        & 0x000000FF;
+        pixel.colorPixel(x,y,r,g,b);
     }
 
-    // https://en.wikipedia.org/wiki/Alpha_compositing#Alpha_blending
     public void colorPixel(int x, int y, int r, int g, int b, int a) {
-        if (x < 0 || y < 0) return;
-        if (x >= width || y >= height) return;
-
-        double aa = a / 255.0;
-        double ra = r / 255.0;
-        double ga = g / 255.0;
-        double ba = b / 255.0;
-
-        int pixel = pixels[y * width + x];
-        double ab = ((pixel >> 24) & 0xFF) / 255.0;
-        double rb = ((pixel >> 16) & 0xFF) / 255.0;
-        double gb = ((pixel >> 8)  & 0xFF) / 255.0;
-        double bb = ((pixel)       & 0xFF) / 255.0;
-
-        double ac = (ab * (1 - aa));
-        double ao = aa + ac;
-
-        double ro = (ra * aa + rb * ac) / ao;
-        double go = (ga * aa + gb * ac) / ao;
-        double bo = (ba * aa + bb * ac) / ao;
-
-        pixels[y * width + x] =
-                ((int) (255 * ao) << 24) & 0xFF000000 |
-                ((int) (255 * ro) << 16) & 0x00FF0000 |
-                ((int) (255 * go) << 8)  & 0x0000FF00 |
-                 (int) (255 * bo)        & 0x000000FF;
+        pixel.colorPixel(x,y,r,g,b,a);
     }
 }
