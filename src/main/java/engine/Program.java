@@ -1,15 +1,16 @@
 package engine;
 
+import lombok.Getter;
 import lombok.Setter;
 
 public abstract class Program {
-    @Setter static String title = "Game Engine";
-    @Setter static int clearColor = 0xFF000000;
-    @Setter public static int width = 200;
-    @Setter public static int height = 200;
-    @Setter static double scale = 2.0;
-    @Setter static double frameCap = 1.0 / 60.0;
-    public Renderer renderer = new Renderer();
+    @Getter @Setter private static String title = "Game Engine";
+    @Getter @Setter private static int clearColor = 0xFF000000;
+    @Getter @Setter private static int width = 200;
+    @Getter @Setter private static int height = 200;
+    @Getter @Setter private static double scale = 2.0;
+    @Getter @Setter private static double frameCap = 1.0 / 60.0;
+
     private Engine engine;
     private boolean initialized = false;
 

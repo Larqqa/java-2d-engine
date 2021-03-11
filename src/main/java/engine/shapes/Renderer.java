@@ -1,3 +1,4 @@
+/*
 package engine;
 
 import engine.shapes.*;
@@ -196,3 +197,4 @@ public class Renderer {
                         (int) (255 * bo)         & 0x000000FF;
     }
 }
+*/

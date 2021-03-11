@@ -1,5 +1,9 @@
 package engine;
 
+import engine.renderer.Renderer;
+import engine.window.PixelCanvas;
+import engine.window.Window;
+
 public class Engine {
     private boolean started = false;
     private final PixelCanvas canvas;
@@ -9,9 +13,8 @@ public class Engine {
     public Engine(Program program) {
         window = new Window();
         canvas = window.getCanvas();
-
         this.program = program;
-        program.renderer.setPixels(canvas.getPixels());
+        Renderer.setPixels(canvas.getPixels());
     }
 
     public void start() {
@@ -44,12 +47,11 @@ public class Engine {
             frameTime += elapsedTime;
             shouldRender = false;
 
-            while(unprocessedTime >= Program.frameCap && unprocessedTime != 0) {
-                unprocessedTime -= Program.frameCap;
+            while(unprocessedTime >= Program.getFrameCap() && unprocessedTime != 0) {
+                unprocessedTime -= Program.getFrameCap();
                 shouldRender = true;
                 program.update();
             }
-
 
             if (frameTime >= 1.0) {
                 frameTime -= frameTime;
@@ -69,4 +71,5 @@ public class Engine {
             }
         }
     }
+
 }

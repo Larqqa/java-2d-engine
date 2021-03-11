@@ -1,7 +1,5 @@
 package engine.shapes;
 
-import engine.Program;
-
 public class Rectangle {
     Triangle triangle;
     Line line;

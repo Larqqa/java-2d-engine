@@ -1,5 +1,6 @@
-package engine;
+package engine.window;
 
+import engine.Program;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -11,10 +12,10 @@ public class Window extends JFrame {
     private final int scaledWidth;
     private final int scaledHeight;
 
-    Window() {
-        frame = new JFrame(Program.title);
+    public Window() {
+        frame = new JFrame(Program.getTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(Program.width, Program.height);
+        frame.setSize(Program.getWidth(), Program.getHeight());
         frame.setResizable(false);
 
         canvas = new PixelCanvas(this);
@@ -24,8 +25,8 @@ public class Window extends JFrame {
         frame.requestFocus();
 
         Insets insets = frame.getInsets();
-        scaledWidth = insets.left + insets.right + (int)(Program.width * Program.scale);
-        scaledHeight = insets.left + insets.right + ((int)(Program.height * Program.scale) + (insets.top - 1));
+        scaledWidth = insets.left + insets.right + (int)(Program.getWidth() * Program.getScale());
+        scaledHeight = insets.left + insets.right + ((int)(Program.getHeight() * Program.getScale()) + (insets.top - 1));
         refresh();
     }
 

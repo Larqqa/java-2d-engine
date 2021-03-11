@@ -1,5 +1,6 @@
-package engine;
+package engine.window;
 
+import engine.Program;
 import lombok.Getter;
 
 import java.awt.*;
@@ -14,14 +15,14 @@ public class PixelCanvas extends JPanel {
     @Getter private final int[] pixels;
     private final Insets insets;
 
-    PixelCanvas(Window window) {
+    PixelCanvas(final Window window) {
         insets =  window.getFrame().getInsets();
-        image = new BufferedImage(Program.width, Program.height, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(Program.getWidth(), Program.getHeight(), BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
     }
 
     public void clear() {
-        Arrays.fill(pixels, Program.clearColor);
+        Arrays.fill(pixels, Program.getClearColor());
     }
 
     @Override
@@ -32,8 +33,8 @@ public class PixelCanvas extends JPanel {
                 image,
                 insets.left,
                 insets.right,
-                (int)(Program.width * Program.scale),
-                (int)(Program.height * Program.scale),
+                (int)(Program.getWidth() * Program.getScale()),
+                (int)(Program.getHeight() * Program.getScale()),
                 this
         );
 
