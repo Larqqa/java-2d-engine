@@ -10,7 +10,7 @@ public class Engine {
     private final Window window;
     private final Program program;
 
-    public Engine(Program program) {
+    public Engine(final Program program) {
         window = new Window();
         canvas = window.getCanvas();
         this.program = program;
