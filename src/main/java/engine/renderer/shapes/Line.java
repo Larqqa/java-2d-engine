@@ -7,13 +7,13 @@ public class Line extends Shape {
     // Draws squares of variable sizes to simulate bigger lines
     // https://www.youtube.com/watch?v=IDFB5CDpLDE&t=164s
     public static boolean[] plot(Point firstPoint, Point secondPoint, int lineWidth) {
-        int minimumX = Math.min(firstPoint.getX(), secondPoint.getX());
-        int minimumY = Math.min(firstPoint.getY(), secondPoint.getY());
+        int minX = Math.min(firstPoint.getX(), secondPoint.getX());
+        int minY = Math.min(firstPoint.getY(), secondPoint.getY());
 
-        int firstX = firstPoint.getX() - minimumX;
-        int firstY = firstPoint.getY() - minimumY;
-        int secondX = secondPoint.getX() - minimumX;
-        int secondY = secondPoint.getY() - minimumY;
+        int firstX = firstPoint.getX() - minX;
+        int firstY = firstPoint.getY() - minY;
+        int secondX = secondPoint.getX() - minX;
+        int secondY = secondPoint.getY() - minY;
 
         int width = Math.max(firstX, secondX) + lineWidth;
         int height = Math.max(firstY, secondY) + lineWidth;

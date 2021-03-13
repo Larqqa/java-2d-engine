@@ -8,4 +8,14 @@ public abstract class Shape {
             }
         }
     }
+
+    public static void combinePixels(int offsetX, int offsetY, boolean[] shape, int shapeWidth, boolean[] target, int targetWidth) {
+        for (int i = 0; i < shape.length; i++) {
+            int x = (i % shapeWidth);
+            int y = (i / shapeWidth);
+            if (shape[i]) {
+                target[(offsetY + y) * targetWidth + (offsetX + x)] = true;
+            }
+        }
+    }
 }

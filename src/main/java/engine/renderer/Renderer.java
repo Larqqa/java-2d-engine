@@ -2,11 +2,14 @@ package engine.renderer;
 
 import engine.renderer.shapes.Line;
 import engine.renderer.shapes.Circle;
+import engine.renderer.shapes.Polygon;
+import engine.renderer.shapes.Triangle;
 import engine.utilities.Color;
 import engine.Program;
 import engine.utilities.Point;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Renderer {
@@ -49,6 +52,78 @@ public class Renderer {
         draw(offsetPoint, pixels, radius * 2 + 1, color);
     }
 
+    public static void triangle(Point firstPoint, Point secondPoint, Point thirdPoint, int lineWidth, Color color) {
+        int minX = Math.min(Math.min(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX());
+        int minY = Math.min(Math.min(firstPoint.getY(), secondPoint.getY()), thirdPoint.getY());
+        int maxX = Math.max(Math.max(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX()) + lineWidth;
+        boolean[] pixels = Triangle.plot(firstPoint, secondPoint, thirdPoint, lineWidth);
+
+        int halfWidth = lineWidth / 2;
+        Point offsetPoint = new Point(minX - halfWidth, minY - halfWidth);
+        draw(offsetPoint, pixels, maxX - minX, color);
+    }
+
+    public static void triangle(Point firstPoint, Point secondPoint, Point thirdPoint, Color color) {
+        triangle(firstPoint, secondPoint, thirdPoint, 1, color);
+    }
+
+    public static void triangleFill(Point firstPoint, Point secondPoint, Point thirdPoint, Color color) {
+        int minX = Math.min(Math.min(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX());
+        int minY = Math.min(Math.min(firstPoint.getY(), secondPoint.getY()), thirdPoint.getY());
+        int maxX = Math.max(Math.max(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX()) + 1;
+        boolean[] pixels = Triangle.fill(firstPoint, secondPoint, thirdPoint);
+
+        Point offsetPoint = new Point(minX, minY);
+        draw(offsetPoint, pixels, maxX - minX, color);
+    }
+
+    public static void polygon(ArrayList<Point> points, int lineWidth, Color color) {
+        int minX = Program.getWidth();
+        int minY = Program.getHeight();
+        int maxX = 0;
+        int maxY = 0;
+
+        for (int i = 0; i < points.size(); i++) {
+            int x = points.get(i).getX();
+            int y = points.get(i).getY();
+
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+        }
+        maxX += lineWidth;
+
+        boolean[] pixels = Polygon.plot(points, lineWidth);
+
+        Point offsetPoint = new Point(minX, minY);
+        drawbg(offsetPoint, pixels, maxX - minX, color);
+    }
+
+    public static void polygon(ArrayList<Point> points, Color color) {
+        int minX = Program.getWidth();
+        int minY = Program.getHeight();
+        int maxX = 0;
+        int maxY = 0;
+
+        for (int i = 0; i < points.size(); i++) {
+            int x = points.get(i).getX();
+            int y = points.get(i).getY();
+
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+        }
+        maxX += 1;
+
+        boolean[] pixels = Polygon.fill(points);
+
+        Point offsetPoint = new Point(minX, minY);
+        drawbg(offsetPoint, pixels, maxX - minX, color);
+    }
 
     public static void test(){
         for(int y = 0; y < Program.getHeight(); y++) {
