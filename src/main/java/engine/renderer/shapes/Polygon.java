@@ -3,22 +3,19 @@ package engine.renderer.shapes;
 import engine.Program;
 import engine.utilities.Point;
 
-import java.lang.reflect.Array;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Comparator;
 
-import static engine.renderer.shapes.Shape.combinePixels;
-
-public class Polygon {
-    public static boolean[] plot(ArrayList<Point> points, int lineWidth) {
+public class Polygon extends Shape {
+    public static boolean[] plot(ArrayList<Point> pointArray, int lineWidth) {
         int minX = Program.getWidth();
         int minY = Program.getHeight();
         int maxX = 0;
         int maxY = 0;
 
-        for (int i = 0; i < points.size(); i++) {
-            int x = points.get(i).getX();
-            int y = points.get(i).getY();
+        for (Point value : pointArray) {
+            int x = value.getX();
+            int y = value.getY();
 
             if (x < minX) minX = x;
             if (y < minY) minY = y;
@@ -27,13 +24,17 @@ public class Polygon {
             if (y > maxY) maxY = y;
         }
 
-        for (int i = 0; i < points.size(); i++) {
-            int x = points.get(i).getX() - minX;
-            int y = points.get(i).getY() - minY;
-            points.set(i, new Point(x, y));
+        ArrayList<Point> points = new ArrayList<>();
+        for (Point point : pointArray) {
+            int x = point.getX() - minX;
+            int y = point.getY() - minY;
+            points.add(new Point(x, y));
         }
 
-        points.add(points.get(0));
+        // Close the loop
+        if (points.get(0) != points.get(points.size() - 1)) {
+            points.add(points.get(0));
+        }
 
         maxX += lineWidth;
         maxY += lineWidth;
@@ -58,17 +59,20 @@ public class Polygon {
         return pixels;
     }
 
-    public static boolean[] fill(ArrayList<Point> points) {
-        boolean[] pixels = plot(points, 1);
+    // sunshine2k.de/coding/java/Polygon/Filling/FillPolygon.htm
+    // https://www.ques10.com/p/11008/explain-scan-line-fill-algorithm-with-an-example-1/
+    // https://stackoverflow.com/questions/24469459/scanline-algorithm-how-to-calculate-intersection-points
+    public static boolean[] fill(ArrayList<Point> pointArray) {
+        boolean[] pixels = plot(pointArray, 1);
 
         int minX = Program.getWidth();
         int minY = Program.getHeight();
         int maxX = 0;
         int maxY = 0;
 
-        for (int i = 0; i < points.size(); i++) {
-            int x = points.get(i).getX();
-            int y = points.get(i).getY();
+        for (Point item : pointArray) {
+            int x = item.getX();
+            int y = item.getY();
 
             if (x < minX) minX = x;
             if (y < minY) minY = y;
@@ -76,44 +80,109 @@ public class Polygon {
             if (x > maxX) maxX = x;
             if (y > maxY) maxY = y;
         }
+
+        ArrayList<Point> points = new ArrayList<>();
+        for (Point value : pointArray) {
+            int x = value.getX() - minX;
+            int y = value.getY() - minY;
+            points.add(new Point(x, y));
+        }
+
         maxX += 1;
         maxY += 1;
 
         int width = maxX - minX;
         int height = maxY - minY;
 
-        ArrayList<int[]> fillPoints = new ArrayList<>();
-        for (int y = 0; y < height; y++) {
-            int pixelCount = 0;
-            Integer first = 0;
+        for (Point point : points) {
+            int x = point.getX();
+            int y = point.getY();
 
-            for (int x = 0; x < width; x++) {
-                int location = y * width + x;
-
-                if (pixels[location]) {
-                    pixelCount++;
-
-                    if (pixelCount % 2 == 0) {
-                        int[] linePoints = new int[2];
-                        linePoints[0] = first;
-                        linePoints[1] = location;
-                        fillPoints.add(linePoints);
-
-                        pixelCount = 0;
-                    } else {
-                        first = location;
-                    }
-                }
-            }
-
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
         }
 
-        for (int i = 0; i < fillPoints.size(); i++) {
-            int[] fillers = fillPoints.get(i);
+        ArrayList<Point[]> edges = new ArrayList<>();
+        for (int i = 0; i < points.size() - 1; i++) {
+            Point[] pts = new Point[2];
+            Point one = points.get(i);
+            Point two = points.get(i + 1);
 
-            if (fillers[0] == 0) continue;
-            for (int j = fillers[0]; j < fillers[1]; j++) {
-                pixels[j] = true;
+            if (one.getY() > two.getY()) {
+                Point temp = one;
+                one = two;
+                two = temp;
+            }
+
+            pts[0] = one;
+            pts[1] = two;
+            edges.add(pts);
+        }
+
+        if (points.get(0) != points.get(points.size() - 1)){
+            Point[] pts = new Point[2];
+            Point one = points.get(points.size() - 1);
+            Point two = points.get(0);
+
+            if (one.getY() > two.getY()) {
+                Point temp = one;
+                one = two;
+                two = temp;
+            }
+
+            pts[0] = one;
+            pts[1] = two;
+            edges.add(pts);
+        }
+
+        edges.sort(Comparator.comparingInt(edge -> edge[0].getY()));
+
+        ArrayList<ArrayList<Point>> fillPairs = new ArrayList<>();
+        for (int y = minY; y < maxY; y++) {
+            int intersections = 1;
+            Point first = new Point(0,0);
+            ArrayList<Point> intersectionPoints = new ArrayList<>();
+
+            for (Point[] edge: edges) {
+                int x1 = edge[0].getX();
+                int y1 = edge[0].getY();
+                int x2 = edge[1].getX();
+                int y2 = edge[1].getY();
+
+                if (y < y1 || y > y2) continue;
+
+                int deltaX = x2 - x1;
+                int deltaY = y2 - y1;
+                deltaX = deltaX == 0 ? 1 : deltaX;
+                deltaY = deltaY == 0 ? 1 : deltaY;
+
+                int x = (int)Math.floor(x1 + (double)deltaX / deltaY * (y - y1));
+
+                if ((y1 <= y && y2 > y) || (y2 <= y && y1 > y)) {
+                    if (intersections % 2 == 0 && intersections != 0) {
+                        intersectionPoints.add(first);
+                        intersectionPoints.add(new Point(x,y));
+                    }
+                    first = new Point(x,y);
+                    intersections++;
+                }
+            }
+            fillPairs.add(intersectionPoints);
+        }
+
+        for (int i = 0; i < fillPairs.size() - 1; i++) {
+            ArrayList<Point> drawingPoints = fillPairs.get(i);
+            drawingPoints.sort(Comparator.comparingInt(Point::getX));
+
+            for (int j = 0; j < drawingPoints.size() - 1; j += 2) {
+                Point firstPoint = drawingPoints.get(j);
+                Point secondPoint = drawingPoints.get(j + 1);
+
+                minX = Math.min(firstPoint.getX(), secondPoint.getX());
+                minY = Math.min(firstPoint.getY(), secondPoint.getY());
+                int lineW = (Math.max(firstPoint.getX(), secondPoint.getX()) + 1) - minX;
+                boolean[] line = Line.plot(firstPoint, secondPoint, 1);
+                combinePixels(minX, minY, line, lineW, pixels, width);
             }
         }
 

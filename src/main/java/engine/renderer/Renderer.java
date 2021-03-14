@@ -83,9 +83,9 @@ public class Renderer {
         int maxX = 0;
         int maxY = 0;
 
-        for (int i = 0; i < points.size(); i++) {
-            int x = points.get(i).getX();
-            int y = points.get(i).getY();
+        for (Point point : points) {
+            int x = point.getX();
+            int y = point.getY();
 
             if (x < minX) minX = x;
             if (y < minY) minY = y;
@@ -97,8 +97,9 @@ public class Renderer {
 
         boolean[] pixels = Polygon.plot(points, lineWidth);
 
-        Point offsetPoint = new Point(minX, minY);
-        drawbg(offsetPoint, pixels, maxX - minX, color);
+        int halfWidth = lineWidth / 2;
+        Point offsetPoint = new Point(minX - halfWidth, minY - halfWidth);
+        draw(offsetPoint, pixels, maxX - minX, color);
     }
 
     public static void polygon(ArrayList<Point> points, Color color) {
@@ -107,9 +108,9 @@ public class Renderer {
         int maxX = 0;
         int maxY = 0;
 
-        for (int i = 0; i < points.size(); i++) {
-            int x = points.get(i).getX();
-            int y = points.get(i).getY();
+        for (Point point : points) {
+            int x = point.getX();
+            int y = point.getY();
 
             if (x < minX) minX = x;
             if (y < minY) minY = y;
@@ -122,7 +123,7 @@ public class Renderer {
         boolean[] pixels = Polygon.fill(points);
 
         Point offsetPoint = new Point(minX, minY);
-        drawbg(offsetPoint, pixels, maxX - minX, color);
+        draw(offsetPoint, pixels, maxX - minX, color);
     }
 
     public static void test(){

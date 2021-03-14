@@ -43,15 +43,28 @@ public class PseudoProgram extends Program {
 //                new Point(100,100 + y2),
 //                new Point(150 - x2,150 + y2),
 //                new Color(1.0,1.0,0.0));
+//
+//        ArrayList<Point> points = new ArrayList<Point>();
+//        points.add(new Point(100,30));
+//        points.add(new Point(100 + x2, 50 + y2));
+//        points.add(new Point(120 - x2,50 - y2));
+//        points.add(new Point(120,30));
+//        points.add(new Point(130,70));
+//        points.add(new Point(70,60));
+//
+//        polygon(points, 3, new Color(1.0,0.0,1.0, 0.5));
+//        polygon(points, new Color(0.0,1.0,1.0, 0.5));
 
         ArrayList<Point> points = new ArrayList<Point>();
         points.add(new Point(100,30));
-        points.add(new Point(100,50));
-        points.add(new Point(120,50));
         points.add(new Point(120,30));
-        points.add(new Point(130,70));
-        points.add(new Point(70,60));
+        points.add(new Point(120,50));
+        points.add(new Point(100,50));
 
-        polygon(points, new Color(1.0,1.0,1.0));
+        polygon(points, new Color(0.0,1.0,1.0, 0.5));
+
+
+
+//        stop();
     }
 }
