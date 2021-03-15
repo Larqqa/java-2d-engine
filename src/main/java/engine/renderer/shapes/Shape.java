@@ -4,6 +4,8 @@ public abstract class Shape {
     public static void square(int x, int y, int size, boolean[] pixels, int wd) {
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
+//                System.out.println((y + j) * wd + (x + i) +" "+ wd);
+                if ((y + j) * wd + (x + i) > pixels.length) continue;
                 pixels[(y + j) * wd + (x + i)] = true;
             }
         }

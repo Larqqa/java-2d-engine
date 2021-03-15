@@ -55,16 +55,17 @@ public class PseudoProgram extends Program {
 //        polygon(points, 3, new Color(1.0,0.0,1.0, 0.5));
 //        polygon(points, new Color(0.0,1.0,1.0, 0.5));
 
-        ArrayList<Point> points = new ArrayList<Point>();
-        points.add(new Point(100,30));
-        points.add(new Point(120,30));
-        points.add(new Point(120,50));
-        points.add(new Point(100,50));
+//        ArrayList<Point> points = new ArrayList<Point>();
+//        points.add(new Point(100,30));
+//        points.add(new Point(120,30));
+//        points.add(new Point(120,50));
+//        points.add(new Point(100,50));
+//
+//        polygon(points, new Color(0.0,1.0,1.0, 0.5));
 
-        polygon(points, new Color(0.0,1.0,1.0, 0.5));
+        ellipse(new Point(100,100),50, 2, 1, new Color(1.0,1.0,1.0));
 
 
-
-//        stop();
+        stop();
     }
 }

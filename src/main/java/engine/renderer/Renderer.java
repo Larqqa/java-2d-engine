@@ -1,9 +1,6 @@
 package engine.renderer;
 
-import engine.renderer.shapes.Line;
-import engine.renderer.shapes.Circle;
-import engine.renderer.shapes.Polygon;
-import engine.renderer.shapes.Triangle;
+import engine.renderer.shapes.*;
 import engine.utilities.Color;
 import engine.Program;
 import engine.utilities.Point;
@@ -50,6 +47,26 @@ public class Renderer {
         boolean[] pixels = Circle.fill(radius);
         Point offsetPoint = new Point(point.getX() - radius,point.getY() - radius);
         draw(offsetPoint, pixels, radius * 2 + 1, color);
+    }
+
+    public static void ellipse(Point point, int xRadius, int yRadius, int lineWidth, Color color) {
+        boolean[] pixels = Ellipse.plot(xRadius, yRadius, lineWidth);
+
+        int halfWidth = lineWidth / 2;
+        int widthDiameter = xRadius * 2 + lineWidth;
+
+        Point offsetPoint = new Point(point.getX() - xRadius - halfWidth,point.getY() - yRadius - halfWidth);
+//        Point offsetPoint = new Point(0,0);
+        drawbg(offsetPoint, pixels, widthDiameter, color);
+    }
+
+    public static void ellipse(Point point, int xRadius, int yRadius, Color color) {
+        boolean[] pixels = Ellipse.fill(xRadius, yRadius);
+
+        int widthDiameter = xRadius * 2 + 1;
+
+        Point offsetPoint = new Point(point.getX() - xRadius,point.getY() - yRadius);
+        draw(offsetPoint, pixels, widthDiameter, color);
     }
 
     public static void triangle(Point firstPoint, Point secondPoint, Point thirdPoint, int lineWidth, Color color) {
