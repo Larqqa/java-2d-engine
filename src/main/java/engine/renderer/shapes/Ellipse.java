@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public class Ellipse extends Shape {
     // https://www.geeksforgeeks.org/midpoint-ellipse-drawing-algorithm/
     public static boolean[] plot(int width, int height, int lineWidth) {
-        width += lineWidth;
-        height += lineWidth;
         int widthDiameter = width * 2 + lineWidth;
         int heightDiameter = height * 2 + lineWidth;
 
@@ -20,8 +18,8 @@ public class Ellipse extends Shape {
         int x = 0;
         int y = height;
         double d1 = (height * height)
-                - (width * width * width)
-                + (0.25 * width * width);
+                - (0.5 * width * width * width)
+                + (0.5 * width * width);
         int dx = 2 * height * height * x;
         int dy = 2 * width * width * y;
 

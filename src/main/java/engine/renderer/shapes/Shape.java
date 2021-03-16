@@ -1,11 +1,14 @@
 package engine.renderer.shapes;
 
+import engine.utilities.MinMax;
+import engine.utilities.Point;
+
+import java.util.ArrayList;
+
 public abstract class Shape {
     public static void square(int x, int y, int size, boolean[] pixels, int wd) {
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
-//                System.out.println((y + j) * wd + (x + i) +" "+ wd);
-                if ((y + j) * wd + (x + i) > pixels.length) continue;
                 pixels[(y + j) * wd + (x + i)] = true;
             }
         }
@@ -19,5 +22,15 @@ public abstract class Shape {
                 target[(offsetY + y) * targetWidth + (offsetX + x)] = true;
             }
         }
+    }
+
+    public static ArrayList<Point> normalizePoints(ArrayList<Point> pointArray, MinMax minMax) {
+        ArrayList<Point> points = new ArrayList<>();
+        for (Point point : pointArray) {
+            int x = point.getX() - minMax.getMinX();
+            int y = point.getY() - minMax.getMinY();
+            points.add(new Point(x, y));
+        }
+        return points;
     }
 }

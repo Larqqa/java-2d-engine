@@ -1,22 +1,29 @@
 package engine.renderer.shapes;
 
+import engine.utilities.MinMax;
 import engine.utilities.Point;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Line extends Shape {
     // Brasenham's line algorithm
     // Draws squares of variable sizes to simulate bigger lines
     // https://www.youtube.com/watch?v=IDFB5CDpLDE&t=164s
     public static boolean[] plot(Point firstPoint, Point secondPoint, int lineWidth) {
-        int minX = Math.min(firstPoint.getX(), secondPoint.getX());
-        int minY = Math.min(firstPoint.getY(), secondPoint.getY());
+        ArrayList<Point> points = new ArrayList<>(
+                Arrays.asList(firstPoint, secondPoint));
+        MinMax minMax = new MinMax(points, lineWidth);
+        points = normalizePoints(points, minMax);
+        minMax = new MinMax(points, 0);
 
-        int firstX = firstPoint.getX() - minX;
-        int firstY = firstPoint.getY() - minY;
-        int secondX = secondPoint.getX() - minX;
-        int secondY = secondPoint.getY() - minY;
+        int firstX = points.get(0).getX();
+        int firstY = points.get(0).getY();
+        int secondX = points.get(1).getX();
+        int secondY = points.get(1).getY();
 
-        int width = Math.max(firstX, secondX) + lineWidth;
-        int height = Math.max(firstY, secondY) + lineWidth;
+        int width = minMax.getMaxX() + lineWidth;
+        int height = minMax.getMaxY() + lineWidth;
 
         boolean[] pixels = new boolean[width * height];
 

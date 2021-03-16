@@ -12,7 +12,7 @@ public class PseudoProgram extends Program {
     private int angle = 0;
 
     public PseudoProgram() {
-        Program.setTitle("yeet");
+        Program.setTitle("title");
 //        Program.setWidth(300);
         Program.setScale(4.0);
 //        Program.setFrameCap(1.0 / 4);
@@ -37,7 +37,13 @@ public class PseudoProgram extends Program {
 
 //        line(new Point(100,100), new Point(100 + x2,100 + y2), 5, new Color(1.0,0.0,0.0));
 //        circleFill(new Point(100,100), 50,new Color(1.0,1.0,0.0, 0.5));
-//        circle(new Point(100,100), 50, 5, new Color(0.0,0.0,1.0, 0.5));
+//        circle(new Point(100,100), 50, 1, new Color(0.0,0.0,1.0, 0.5));
+
+//        triangleFill(
+//                new Point(50 + x2,100 - y2),
+//                new Point(100,100 + y2),
+//                new Point(150 - x2,150 + y2),
+//                new Color(1.0,1.0,0.0, 0.5));
 //        triangle(
 //                new Point(50 + x2,100 - y2),
 //                new Point(100,100 + y2),
@@ -49,10 +55,10 @@ public class PseudoProgram extends Program {
 //        points.add(new Point(100 + x2, 50 + y2));
 //        points.add(new Point(120 - x2,50 - y2));
 //        points.add(new Point(120,30));
-//        points.add(new Point(130,70));
-//        points.add(new Point(70,60));
+//        points.add(new Point(130 + x2,70));
+//        points.add(new Point(70,60 + y2));
 //
-//        polygon(points, 3, new Color(1.0,0.0,1.0, 0.5));
+//        polygon(points,  new Color(1.0,0.0,1.0, 0.5));
 //        polygon(points, new Color(0.0,1.0,1.0, 0.5));
 
 //        ArrayList<Point> points = new ArrayList<Point>();
@@ -63,9 +69,9 @@ public class PseudoProgram extends Program {
 //
 //        polygon(points, new Color(0.0,1.0,1.0, 0.5));
 
-        ellipse(new Point(100,100),50, 2, 1, new Color(1.0,1.0,1.0));
+        ellipse(new Point(100,100),50, 20, 1, new Color(1.0,1.0,1.0));
 
 
-        stop();
+//        stop();
     }
 }
