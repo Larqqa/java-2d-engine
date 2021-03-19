@@ -1,11 +1,9 @@
 package engine.utilities;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class Point {
-    @Getter @Setter private int x;
-    @Getter @Setter private int y;
+
+    private int x;
+    private int y;
 
     public Point(final int x, final int y) {
         this.x = x;
@@ -81,5 +79,21 @@ public class Point {
         double distanceX = point.getX() - x;
         double distanceY = point.getY() - y;
         return distanceX * distanceX + distanceY * distanceY;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

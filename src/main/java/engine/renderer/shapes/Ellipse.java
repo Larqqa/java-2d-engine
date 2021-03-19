@@ -6,68 +6,86 @@ import engine.utilities.Point;
 import java.util.ArrayList;
 
 public class Ellipse extends Shape {
+    private static void plotPoints(int x, int width, int y, int height, ArrayList<Point[]> scanlines) {
+        Point[] firstPoints = new Point[2];
+        firstPoints[0] = new Point(-x + width, y + height);
+        firstPoints[1] = new Point(x + width, y + height);
+        scanlines.add(firstPoints);
+
+        Point[] secondPoints = new Point[2];
+        secondPoints[0] = new Point(-x + width, -y + height);
+        secondPoints[1] = new Point(x + width, -y + height);
+        scanlines.add(secondPoints);
+    }
+
+    private static ArrayList<Point[]> calculatePoints(int width, int height) {
+        int widthSquared = width * width;
+        int heightSquared = height * height;
+        int twoWidthSquared = 2 * widthSquared;
+        int twoHeightSquared = 2 * heightSquared;
+
+        ArrayList<Point[]> scanlines = new ArrayList<>();
+
+        int x = 0;
+        int y = height;
+        int px = 0;
+        int py = twoWidthSquared * y;
+
+        plotPoints(x, width, y, height, scanlines);
+
+        int p1 = (int)(heightSquared - (widthSquared * height) + (0.25 + widthSquared));
+        while (px < py) {
+            x++;
+            px += twoHeightSquared;
+
+            if (p1 < 0) {
+                p1 += heightSquared + px;
+            } else {
+                y--;
+                py -= twoWidthSquared;
+                p1 += heightSquared + px - py;
+            }
+
+            plotPoints(x, width, y, height, scanlines);
+        }
+
+        double xOff = x + 0.5;
+        int yOff = y - 1;
+        int p2 = (int)(heightSquared * xOff * xOff + widthSquared * yOff * yOff - widthSquared * heightSquared);
+        while (y > 0) {
+            y--;
+            py -= twoWidthSquared;
+
+            if (p2 > 0) {
+                p2 += widthSquared - py;
+            } else {
+                x++;
+                px += twoHeightSquared;
+                p2 += widthSquared + px - py;
+            }
+            plotPoints(x, width, y, height, scanlines);
+        }
+
+        return scanlines;
+    }
+
     // https://www.geeksforgeeks.org/midpoint-ellipse-drawing-algorithm/
+    // https://problem4me.wordpress.com/2007/07/28/midpoint-ellipse-java-code/
     public static boolean[] plot(int width, int height, int lineWidth) {
         int widthDiameter = width * 2 + lineWidth;
         int heightDiameter = height * 2 + lineWidth;
 
         boolean[] pixels = new boolean[widthDiameter * heightDiameter];
 
-        System.out.println(widthDiameter);
-
-        int x = 0;
-        int y = height;
-        double d1 = (height * height)
-                - (0.5 * width * width * width)
-                + (0.5 * width * width);
-        int dx = 2 * height * height * x;
-        int dy = 2 * width * width * y;
-
-        while(dx < dy) {
-            System.out.println(x +" "+ (x + width));
-            square(x + width, y + height, lineWidth, pixels, widthDiameter);
-            square(-x + width, y + height, lineWidth, pixels, widthDiameter);
-            square(x + width, -y + height, lineWidth, pixels, widthDiameter);
-            square(-x + width, -y + height, lineWidth, pixels, widthDiameter);
-
-            if (d1 < 0) {
-                x++;
-                dx = dx + (2 * height * height);
-                d1 = d1 + dx + (height * height);
-            } else {
-                x++;
-                y--;
-                dx = dx + (2 * height * height);
-                dy = dy - (2 * width * width);
-                d1 = d1 + dx - dy + (height * height);
-            }
-        }
-
-        double d2 = ((height * height) * ((x + 0.5) * (x + 0.5)))
-                + ((width * width) * ((y - 1) * (y - 1)))
-                - (width * width * height * height);
-
-        while(y >= 0) {
-            square(x + width, y + height, lineWidth, pixels, widthDiameter);
-            square(-x + width, y + height, lineWidth, pixels, widthDiameter);
-            square(x + width, -y + height, lineWidth, pixels, widthDiameter);
-            square(-x + width, -y + height, lineWidth, pixels, widthDiameter);
-
-            if (d2 > 0) {
-                y--;
-                dy = dy - (2 * width * width);
-                d2 = d2 + (width * width) - dy;
-            } else {
-                x++;
-                y--;
-                dx = dx + (2 * height * height);
-                dy = dy - (2 * width * width);
-                d2 = d2 + dx - dy + (width * width);
-            }
+        ArrayList<Point[]> scanLines = calculatePoints(width, height);
+        for (Point[] line : scanLines) {
+            square(line[0].getX(), line[0].getY(), lineWidth, pixels, widthDiameter);
+            square(line[1].getX(), line[1].getY(), lineWidth, pixels, widthDiameter);
         }
 
         return pixels;
     }
+
 
     public static boolean[] fill(int width, int height) {
         int widthDiameter = width * 2 + 1;
@@ -75,85 +93,10 @@ public class Ellipse extends Shape {
 
         boolean[] pixels = new boolean[widthDiameter * heightDiameter];
 
-        int x = 0;
-        int y = height;
-        double d1 = (height * height) - (width * width * width) + (0.25 * width * width);
-        int dx = 2 * height * height * x;
-        int dy = 2 * width * width * y;
-
-        ArrayList<Point[]> scanlines = new ArrayList<>();
-        while(dx < dy) {
-            Point[] positives = new Point[2];
-            positives[0] = new Point(x + width, y + height);
-            positives[1] = new Point(-x + width, y + height);
-            scanlines.add(positives);
-
-            Point[] negatives = new Point[2];
-            negatives[0] = new Point(x + width, -y + height);
-            negatives[1] = new Point(-x + width, -y + height);
-            scanlines.add(negatives);
-
-            if (d1 < 0) {
-                x++;
-                dx = dx + (2 * height * height);
-                d1 = d1 + dx + (height * height);
-            } else {
-                x++;
-                y--;
-                dx = dx + (2 * height * height);
-                dy = dy - (2 * width * width);
-                d1 = d1 + dx - dy + (height * height);
-            }
-        }
-
-        double d2 = ((height * height) * ((x + 0.5) * (x + 0.5)))
-                + ((width * width) * ((y - 1) * (y - 1)))
-                - (width * width * height * height);
-
-        while(y >= 0) {
-            Point[] positives = new Point[2];
-            positives[0] = new Point(x + width, y + height);
-            positives[1] = new Point(-x + width, y + height);
-            scanlines.add(positives);
-
-            Point[] negatives = new Point[2];
-            negatives[0] = new Point(x + width, -y + height);
-            negatives[1] = new Point(-x + width, -y + height);
-            scanlines.add(negatives);
-
-            if (d2 > 0) {
-                y--;
-                dy = dy - (2 * width * width);
-                d2 = d2 + (width * width) - dy;
-            } else {
-                x++;
-                y--;
-                dx = dx + (2 * height * height);
-                dy = dy - (2 * width * width);
-                d2 = d2 + dx - dy + (width * width);
-            }
-        }
-
-        for (Point[] line : scanlines) {
-            int x1 = line[0].getX();
-            int y1 = line[0].getY();
-            int x2 = line[1].getX();
-            int y2 = line[1].getY();
-
-            if (x1 > x2) {
-                int temp = x1;
-                x1 = x2;
-                x2 = temp;
-            }
-
-            if (y1 > y2) {
-                int temp = y1;
-                y1 = y2;
-                y2 = temp;
-            }
-
-            for (int yLine = y1; yLine <= y2; yLine++) {
-                for (int xLine = x1; xLine <= x2; xLine++) {
+        ArrayList<Point[]> scanLines = calculatePoints(width, height);
+        for (Point[] line : scanLines) {
+            for (int yLine = line[0].getY(); yLine <= line[1].getY(); yLine++) {
+                for (int xLine = line[0].getX(); xLine <= line[1].getX(); xLine++) {
                     pixels[yLine * widthDiameter + xLine] = true;
                 }
             }

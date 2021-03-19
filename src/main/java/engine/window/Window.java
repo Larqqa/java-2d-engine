@@ -1,14 +1,16 @@
 package engine.window;
 
 import engine.Program;
-import lombok.Getter;
+import engine.controls.Keyboard;
+import engine.controls.Mouse;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.Insets;
 
 public class Window extends JFrame {
-    @Getter final private JFrame frame;
-    @Getter final private PixelCanvas canvas;
+
+    final private JFrame frame;
+    final private PixelCanvas canvas;
     private final int scaledWidth;
     private final int scaledHeight;
 
@@ -25,6 +27,15 @@ public class Window extends JFrame {
         frame.requestFocus();
 
         Insets insets = frame.getInsets();
+
+        Keyboard keyListener = Keyboard.getInstance();
+        frame.addKeyListener(keyListener);
+
+        Mouse mouseListener = Mouse.getInstance(insets);
+        frame.addMouseListener(mouseListener);
+        frame.addMouseMotionListener(mouseListener);
+        frame.addMouseWheelListener(mouseListener);
+
         scaledWidth = insets.left + insets.right + (int)(Program.getWidth() * Program.getScale());
         scaledHeight = insets.left + insets.right + ((int)(Program.getHeight() * Program.getScale()) + (insets.top - 1));
         refresh();
@@ -36,5 +47,13 @@ public class Window extends JFrame {
             frame.setSize(frame.getWidth(), scaledHeight);
             frame.setLocationRelativeTo(null);
         }
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public PixelCanvas getCanvas() {
+        return canvas;
     }
 }

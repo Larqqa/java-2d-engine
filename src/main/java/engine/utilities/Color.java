@@ -1,13 +1,11 @@
 package engine.utilities;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class Color {
-    @Getter @Setter private double red;
-    @Getter @Setter private double green;
-    @Getter @Setter private double blue;
-    @Getter @Setter private double alpha;
+
+    private double red;
+    private double green;
+    private double blue;
+    private double alpha;
 
     public Color(final double red, final double green, final double blue) {
         this.red = red;
@@ -32,6 +30,10 @@ public class Color {
 
     // https://en.wikipedia.org/wiki/Alpha_compositing#Alpha_blending
     public int alphaBlend(int color) {
+        if (alpha == 1.0) {
+            return colorToInt();
+        }
+
         double secondAlpha = ((color >> 24) & 0xFF) / 255.0;
         double secondRed   = ((color >> 16) & 0xFF) / 255.0;
         double secondGreen = ((color >> 8)  & 0xFF) / 255.0;
@@ -48,5 +50,37 @@ public class Color {
              | ((int)(255 * newRed)   << 16) & 0x00FF0000
              | ((int)(255 * newGreen) << 8)  & 0x0000FF00
              |  (int)(255 * newBlue)         & 0x000000FF;
+    }
+
+    public double getRed() {
+        return red;
+    }
+
+    public void setRed(double red) {
+        this.red = red;
+    }
+
+    public double getGreen() {
+        return green;
+    }
+
+    public void setGreen(double green) {
+        this.green = green;
+    }
+
+    public double getBlue() {
+        return blue;
+    }
+
+    public void setBlue(double blue) {
+        this.blue = blue;
+    }
+
+    public double getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
     }
 }
