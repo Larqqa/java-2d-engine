@@ -12,8 +12,8 @@ public class Circle extends Shape {
 
         ArrayList<Point[]> scanLines = plotPoints(radius);
         for (Point[] line : scanLines) {
-            for (int yLine = line[0].getY(); yLine <= line[1].getY(); yLine++) {
-                for (int xLine = line[0].getX(); xLine <= line[1].getX(); xLine++) {
+            for (int yLine = (int) line[0].getY(); yLine <= line[1].getY(); yLine++) {
+                for (int xLine = (int) line[0].getX(); xLine <= line[1].getX(); xLine++) {
                     pixels[yLine * diameter + xLine] = true;
                 }
             }
@@ -28,8 +28,8 @@ public class Circle extends Shape {
 
         ArrayList<Point[]> scanLines = plotPoints(radius);
         for (Point[] line : scanLines) {
-            square(line[0].getX(), line[0].getY(), lineWidth, pixels, diameter);
-            square(line[1].getX(), line[1].getY(), lineWidth, pixels, diameter);
+            square((int) line[0].getX(), (int) line[0].getY(), lineWidth, pixels, diameter);
+            square((int) line[1].getX(), (int) line[1].getY(), lineWidth, pixels, diameter);
         }
 
         return pixels;

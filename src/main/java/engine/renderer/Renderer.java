@@ -3,6 +3,7 @@ package engine.renderer;
 import engine.renderer.shapes.*;
 import engine.utilities.Color;
 import engine.Program;
+import engine.utilities.MinMax;
 import engine.utilities.Point;
 
 import java.util.ArrayList;
@@ -34,17 +35,31 @@ public final class Renderer {
     public void clear() {
         Arrays.fill(pixels, Program.getClearColor());
     }
+    public void clear(Color color) {
+        Arrays.fill(pixels, color.colorToInt());
+    }
+
+    public void bezierLine(ArrayList<Point> points, int lineWidth, Color color) {
+        MinMax minMax = new MinMax(points, lineWidth);
+        int halfWidth = lineWidth / 2;
+
+        boolean[] pixels = BezierCurve.plot(points, lineWidth);
+        Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
+        draw(offsetPoint, pixels, minMax.width(), color);
+    }
+
+    public void bezierLine(ArrayList<Point> points, Color color) {
+        bezierLine(points, 1, color);
+    }
 
     public void line(Point firstPoint, Point secondPoint, int lineWidth, Color color) {
-        int minX = Math.min(firstPoint.getX(), secondPoint.getX());
-        int minY = Math.min(firstPoint.getY(), secondPoint.getY());
-        int maxX = Math.max(firstPoint.getX(), secondPoint.getX()) + lineWidth;
-        boolean[] pixels = Line.plot(firstPoint, secondPoint, lineWidth);
-
+        ArrayList<Point> points = new ArrayList<>(Arrays.asList(firstPoint, secondPoint));
+        MinMax minMax = new MinMax(points, lineWidth);
         int halfWidth = lineWidth / 2;
-        Point offsetPoint = new Point(minX - halfWidth, minY - halfWidth);
 
-        draw(offsetPoint, pixels, maxX - minX, color);
+        boolean[] pixels = Line.plot(firstPoint, secondPoint, lineWidth);
+        Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
+        draw(offsetPoint, pixels, minMax.getMaxX() - minMax.getMinX(), color);
     }
 
     public void line(Point firstPoint, Point secondPoint, Color color) {
@@ -52,8 +67,8 @@ public final class Renderer {
     }
 
     public void circle(Point point, int radius, int lineWidth, Color color) {
-        boolean[] pixels = Circle.plot(radius, lineWidth);
         int halfWidth = lineWidth / 2;
+        boolean[] pixels = Circle.plot(radius, lineWidth);
         Point offsetPoint = new Point(point.getX() - radius - halfWidth,point.getY() - radius - halfWidth);
         draw(offsetPoint, pixels, radius * 2 + lineWidth, color);
     }
@@ -67,14 +82,33 @@ public final class Renderer {
     public void ellipse(Point point, int xRadius, int yRadius, int lineWidth, Color color) {
         if (xRadius < 2) xRadius = 2;
         if (yRadius < 2) yRadius = 2;
+        int halfWidth = lineWidth / 2;
 
         boolean[] pixels = Ellipse.plot(xRadius, yRadius, lineWidth);
 
-        int halfWidth = lineWidth / 2;
-        int widthDiameter = xRadius * 2 + lineWidth;
-
         Point offsetPoint = new Point(point.getX() - xRadius - halfWidth,point.getY() - yRadius - halfWidth);
-        draw(offsetPoint, pixels, widthDiameter, color);
+        drawDebug(offsetPoint, pixels, xRadius * 2 + lineWidth, color);
+    }
+
+    public void ellipseRotate(Point point, int xRadius, int yRadius, int angle, int lineWidth, Color color) {
+        if (xRadius < 2) xRadius = 2;
+        if (yRadius < 2) yRadius = 2;
+        int halfWidth = lineWidth / 2;
+
+        boolean[] pixels = Ellipse.plotRotation(xRadius, yRadius, angle, lineWidth);
+
+        Point offsetPoint = new Point(point.getX() - xRadius - halfWidth,point.getY() - xRadius - halfWidth);
+        drawDebug(offsetPoint, pixels, xRadius * 2 + lineWidth, color);
+    }
+
+    public void ellipseRotate(Point point, int xRadius, int yRadius, int angle, Color color) {
+        if (xRadius < 2) xRadius = 2;
+        if (yRadius < 2) yRadius = 2;
+
+        boolean[] pixels = Ellipse.fillRotation(xRadius, yRadius, angle, 1);
+
+        Point offsetPoint = new Point(point.getX() - xRadius,point.getY() - xRadius);
+        drawDebug(offsetPoint, pixels, xRadius * 2 + 1, color);
     }
 
     public void ellipse(Point point, int xRadius, int yRadius, Color color) {
@@ -82,81 +116,69 @@ public final class Renderer {
         if (yRadius < 2) yRadius = 2;
 
         boolean[] pixels = Ellipse.fill(xRadius, yRadius);
-
-        int widthDiameter = xRadius * 2 + 1;
-
         Point offsetPoint = new Point(point.getX() - xRadius,point.getY() - yRadius);
-        draw(offsetPoint, pixels, widthDiameter, color);
+        draw(offsetPoint, pixels, xRadius * 2 + 1, color);
     }
 
     public void triangle(Point firstPoint, Point secondPoint, Point thirdPoint, int lineWidth, Color color) {
-        int minX = Math.min(Math.min(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX());
-        int minY = Math.min(Math.min(firstPoint.getY(), secondPoint.getY()), thirdPoint.getY());
-        int maxX = Math.max(Math.max(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX()) + lineWidth;
+        ArrayList<Point> points = new ArrayList<>(Arrays.asList(firstPoint, secondPoint, thirdPoint));
+        MinMax minMax = new MinMax(points, lineWidth);
         boolean[] pixels = Triangle.plot(firstPoint, secondPoint, thirdPoint, lineWidth);
 
         int halfWidth = lineWidth / 2;
-        Point offsetPoint = new Point(minX - halfWidth, minY - halfWidth);
-        draw(offsetPoint, pixels, maxX - minX, color);
+        Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
+        draw(offsetPoint, pixels, minMax.width(), color);
     }
 
     public void triangle(Point firstPoint, Point secondPoint, Point thirdPoint, Color color) {
-        int minX = Math.min(Math.min(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX());
-        int minY = Math.min(Math.min(firstPoint.getY(), secondPoint.getY()), thirdPoint.getY());
-        int maxX = Math.max(Math.max(firstPoint.getX(),secondPoint.getX()), thirdPoint.getX()) + 1;
+        ArrayList<Point> points = new ArrayList<>(Arrays.asList(firstPoint, secondPoint, thirdPoint));
+        MinMax minMax = new MinMax(points, 1);
         boolean[] pixels = Triangle.fill(firstPoint, secondPoint, thirdPoint);
 
-        Point offsetPoint = new Point(minX, minY);
-        draw(offsetPoint, pixels, maxX - minX, color);
+        Point offsetPoint = new Point(minMax.getMinX(), minMax.getMinY());
+        draw(offsetPoint, pixels, minMax.width(), color);
     }
 
     public void polygon(ArrayList<Point> points, int lineWidth, Color color) {
-        int minX = Program.getWidth();
-        int minY = Program.getHeight();
-        int maxX = 0;
-        int maxY = 0;
-
-        for (Point point : points) {
-            int x = point.getX();
-            int y = point.getY();
-
-            if (x < minX) minX = x;
-            if (y < minY) minY = y;
-
-            if (x > maxX) maxX = x;
-            if (y > maxY) maxY = y;
-        }
-        maxX += lineWidth;
-
+        MinMax minMax = new MinMax(points, lineWidth);
         boolean[] pixels = Polygon.plot(points, lineWidth);
 
         int halfWidth = lineWidth / 2;
-        Point offsetPoint = new Point(minX - halfWidth, minY - halfWidth);
-        draw(offsetPoint, pixels, maxX - minX, color);
+        Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
+        draw(offsetPoint, pixels, minMax.width(), color);
     }
 
     public void polygon(ArrayList<Point> points, Color color) {
-        int minX = Program.getWidth();
-        int minY = Program.getHeight();
-        int maxX = 0;
-        int maxY = 0;
-
-        for (Point point : points) {
-            int x = point.getX();
-            int y = point.getY();
-
-            if (x < minX) minX = x;
-            if (y < minY) minY = y;
-
-            if (x > maxX) maxX = x;
-            if (y > maxY) maxY = y;
-        }
-        maxX += 1;
-
+        MinMax minMax = new MinMax(points, 1);
         boolean[] pixels = Polygon.fill(points);
 
-        Point offsetPoint = new Point(minX, minY);
-        draw(offsetPoint, pixels, maxX - minX, color);
+        Point offsetPoint = new Point(minMax.getMinX(), minMax.getMinY());
+        draw(offsetPoint, pixels, minMax.width(), color);
+    }
+
+    private Point calculateRectanglePoint(Point point, Point origin, double angle) {
+        double length = point.length(origin);
+
+        double deltaX = point.getX() - origin.getX();
+        double deltaY = point.getY() - origin.getY();
+        double newAngle = Math.atan2(deltaY, deltaX) + (angle * Math.PI / 180);
+
+        double xa = Math.round(origin.getX() + length * Math.cos(newAngle));
+        double ya = Math.round(origin.getY() + length * Math.sin(newAngle));
+
+        return new Point(xa, ya);
+    }
+
+    public void rectangle(Point point, int width, int height, double angle, Color color) {
+        int halfWidth = width / 2;
+        int halfHeight = height / 2;
+
+        Point p1 = calculateRectanglePoint(new Point((point.getX() + halfWidth), (point.getY() + halfHeight)), point, angle);
+        Point p2 = calculateRectanglePoint(new Point((point.getX() - halfWidth), (point.getY() + halfHeight)), point, angle);
+        Point p3 = calculateRectanglePoint(new Point((point.getX() - halfWidth), (point.getY() - halfHeight)), point, angle);
+        Point p4 = calculateRectanglePoint(new Point((point.getX() + halfWidth), (point.getY() - halfHeight)), point, angle);
+
+        polygon(new ArrayList<>(Arrays.asList(p1, p2, p3, p4)), color);
     }
 
     public void test(){
@@ -175,8 +197,8 @@ public final class Renderer {
 
     public void draw(Point point, boolean[] shapeArray, int width, Color color) {
         for (int i = 0; i < shapeArray.length; i++) {
-            int offsetX = point.getX() + (i % width);
-            int offsetY = point.getY() + (i / width);
+            int offsetX = (int) Math.floor(point.getX()) + (i % width);
+            int offsetY = (int) Math.floor(point.getY()) + (i / width);
 
             if (offsetX < 0 || offsetY < 0) continue;
             if (offsetX >= Program.getWidth() || offsetY >= Program.getHeight()) continue;
@@ -189,10 +211,10 @@ public final class Renderer {
         }
     }
 
-    public void drawbg(Point point, boolean[] shapeArray, int width, Color color) {
+    public void drawDebug(Point point, boolean[] shapeArray, int width, Color color) {
         for (int i = 0; i < shapeArray.length; i++) {
-            int offsetX = point.getX() + (i % width);
-            int offsetY = point.getY() + (i / width);
+            int offsetX = (int) Math.round(point.getX()) + (i % width);
+            int offsetY = (int) Math.round(point.getY()) + (i / width);
 
             if (offsetX < 0 || offsetY < 0) continue;
             if (offsetX >= Program.getWidth() || offsetY >= Program.getHeight()) continue;
@@ -212,7 +234,7 @@ public final class Renderer {
         if (point.getX() < 0 || point.getY() < 0) return;
         if (point.getX() >= Program.getWidth() || point.getY() >= Program.getHeight()) return;
 
-        int pixelLocation = point.getY() * Program.getWidth() + point.getX();
+        int pixelLocation = (int) (Math.round(point.getY()) * Program.getWidth() + Math.round(point.getX()));
         pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
     }
 }

@@ -8,8 +8,7 @@ import java.util.Arrays;
 
 public class Triangle extends Shape {
     public static boolean[] plot(Point firstPoint, Point secondPoint, Point thirdPoint, int lineWidth) {
-        ArrayList<Point> points = new ArrayList<>(
-                Arrays.asList(firstPoint, secondPoint, thirdPoint));
+        ArrayList<Point> points = new ArrayList<>(Arrays.asList(firstPoint, secondPoint, thirdPoint));
         MinMax minMax = new MinMax(points, lineWidth);
         points = normalizePoints(points, minMax);
         minMax = new MinMax(points, lineWidth);
@@ -22,22 +21,19 @@ public class Triangle extends Shape {
         int height = minMax.height();
         boolean[] pixels = new boolean[width * height];
 
-        MinMax pointMinMax = new MinMax(new ArrayList<>(
-                Arrays.asList(firstPoint, secondPoint)), lineWidth);
+        MinMax pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(firstPoint, secondPoint)), lineWidth);
         combinePixels(
                 pointMinMax.getMinX(), pointMinMax.getMinY(),
                 Line.plot(firstPoint, secondPoint, lineWidth), pointMinMax.width(),
                 pixels, width);
 
-        pointMinMax = new MinMax(new ArrayList<>(
-                Arrays.asList(secondPoint, thirdPoint)), lineWidth);
+        pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(secondPoint, thirdPoint)), lineWidth);
         combinePixels(
                 pointMinMax.getMinX(), pointMinMax.getMinY(),
                 Line.plot(secondPoint, thirdPoint, lineWidth), pointMinMax.width(),
                 pixels, width);
 
-        pointMinMax = new MinMax(new ArrayList<>(
-                Arrays.asList(thirdPoint, firstPoint)), lineWidth);
+        pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(thirdPoint, firstPoint)), lineWidth);
         combinePixels(
                 pointMinMax.getMinX(), pointMinMax.getMinY(),
                 Line.plot(thirdPoint, firstPoint, lineWidth), pointMinMax.width(),
@@ -49,8 +45,7 @@ public class Triangle extends Shape {
     // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
     public static boolean[] fill(Point firstPoint, Point secondPoint, Point thirdPoint) {
         int lineWidth = 1;
-        ArrayList<Point> points = new ArrayList<>(
-                Arrays.asList(firstPoint, secondPoint, thirdPoint));
+        ArrayList<Point> points = new ArrayList<>(Arrays.asList(firstPoint, secondPoint, thirdPoint));
         MinMax minMax = new MinMax(points, lineWidth);
         points = normalizePoints(points, minMax);
         minMax = new MinMax(points, lineWidth);

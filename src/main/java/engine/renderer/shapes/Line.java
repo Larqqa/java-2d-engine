@@ -17,10 +17,10 @@ public class Line extends Shape {
         points = normalizePoints(points, minMax);
         minMax = new MinMax(points, 0);
 
-        int firstX = points.get(0).getX();
-        int firstY = points.get(0).getY();
-        int secondX = points.get(1).getX();
-        int secondY = points.get(1).getY();
+        int firstX = (int) points.get(0).getX();
+        int firstY = (int) points.get(0).getY();
+        int secondX = (int) points.get(1).getX();
+        int secondY = (int) points.get(1).getY();
 
         int width = minMax.getMaxX() + lineWidth;
         int height = minMax.getMaxY() + lineWidth;
@@ -40,7 +40,7 @@ public class Line extends Shape {
             for (int y = firstY; y <= secondY; y++) {
                 square(firstX, y, lineWidth, pixels, width);
             }
-        }else {
+        } else {
             float slope = (float) rise / run;
             int adjust = slope >= 0 ? 1 : -1;
             float offset = 0;

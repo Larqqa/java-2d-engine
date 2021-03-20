@@ -30,9 +30,9 @@ public class Polygon extends Shape {
             MinMax pointMinMax = new MinMax(new ArrayList<>(
                     Arrays.asList(previousPoint, thisPoint)), lineWidth);
 
-            int minX = Math.min(previousPoint.getX(), thisPoint.getX());
-            int minY = Math.min(previousPoint.getY(), thisPoint.getY());
-            int lineW = (Math.max(previousPoint.getX(), thisPoint.getX()) + lineWidth) - minX;
+            int minX = (int) Math.min(previousPoint.getX(), thisPoint.getX());
+            int minY = (int) Math.min(previousPoint.getY(), thisPoint.getY());
+            int lineW = (int) (Math.max(previousPoint.getX(), thisPoint.getX()) + lineWidth) - minX;
             combinePixels(minX, minY, Line.plot(previousPoint, thisPoint, lineWidth), lineW, pixels, width);
 
             combinePixels(
@@ -55,9 +55,8 @@ public class Polygon extends Shape {
 
         MinMax minMax = new MinMax(pointArray, lineWidth);
         ArrayList<Point> points = normalizePoints(pointArray, minMax);
-
-        int width = minMax.width();
         minMax = new MinMax(points, lineWidth);
+        int width = minMax.width();
 
         // Close the loop
         if (points.get(0) != points.get(points.size() - 1)) {
@@ -81,7 +80,7 @@ public class Polygon extends Shape {
             edges.add(edgePoints);
         }
 
-        edges.sort(Comparator.comparingInt(edge -> edge[0].getY()));
+        edges.sort(Comparator.comparingInt(edge -> (int) edge[0].getY()));
 
         ArrayList<ArrayList<Point>> scanlines = new ArrayList<>();
         for (int y = minMax.getMinY(); y < minMax.getMaxY(); y++) {
@@ -90,10 +89,10 @@ public class Polygon extends Shape {
             int intersections = 1;
 
             for (Point[] edge: edges) {
-                int firstX = edge[0].getX();
-                int firstY = edge[0].getY();
-                int secondX = edge[1].getX();
-                int secondY = edge[1].getY();
+                int firstX = (int) edge[0].getX();
+                int firstY = (int) edge[0].getY();
+                int secondX = (int) edge[1].getX();
+                int secondY = (int) edge[1].getY();
 
                 if (y < firstY || y > secondY) continue;
 
@@ -104,7 +103,7 @@ public class Polygon extends Shape {
                 deltaX = deltaX == 0 ? 1 : deltaX;
                 deltaY = deltaY == 0 ? 1 : deltaY;
 
-                int x = (int) Math.floor(firstX + (double) deltaX / deltaY * (y - firstY));
+                int x = (int) Math.round(firstX + (double) deltaX / deltaY * (y - firstY));
 
                 if (secondY > y) {
                     if (intersections % 2 == 0 && intersections != 0) {
@@ -120,7 +119,7 @@ public class Polygon extends Shape {
 
         for (int i = 0; i < scanlines.size() - 1; i++) {
             ArrayList<Point> drawingPoints = scanlines.get(i);
-            drawingPoints.sort(Comparator.comparingInt(Point::getX));
+            drawingPoints.sort(Comparator.comparingDouble(Point::getX));
 
             for (int j = 0; j < drawingPoints.size() - 1; j += 2) {
                 Point firstPoint = drawingPoints.get(j);

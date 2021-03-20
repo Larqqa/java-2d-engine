@@ -39,6 +39,7 @@ public class Window extends JFrame {
         scaledWidth = insets.left + insets.right + (int)(Program.getWidth() * Program.getScale());
         scaledHeight = insets.left + insets.right + ((int)(Program.getHeight() * Program.getScale()) + (insets.top - 1));
         refresh();
+        refresh();
     }
 
     public void refresh() {

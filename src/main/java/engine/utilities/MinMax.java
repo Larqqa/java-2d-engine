@@ -11,15 +11,17 @@ public class MinMax {
 
     public MinMax(final ArrayList<Point> pointArray, int offSet) {
         for (Point point : pointArray) {
-            int x = point.getX();
-            int y = point.getY();
+            int x = (int) point.getX();
+            int y = (int) point.getY();
 
             if (x < minX) minX = x;
             if (y < minY) minY = y;
 
-            if (x >= maxX) maxX = x + offSet;
-            if (y >= maxY) maxY = y + offSet;
+            if (x >= maxX) maxX = x;
+            if (y >= maxY) maxY = y;
         }
+        maxX += offSet;
+        maxY += offSet;
     }
 
     public int width() {

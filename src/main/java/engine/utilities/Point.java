@@ -2,10 +2,10 @@ package engine.utilities;
 
 public class Point {
 
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
-    public Point(final int x, final int y) {
+    public Point(final double x, final double y) {
         this.x = x;
         this.y = y;
     }
@@ -48,10 +48,10 @@ public class Point {
 
     public Point toUnitVector() {
         double length = length();
-        return new Point((int)(x / length), (int)(y / length));
+        return new Point(x / length, y / length);
     }
 
-    public int dot(Point point) {
+    public double dot(Point point) {
         return x * point.getX()
              + y * point.getY();
     }
@@ -81,7 +81,13 @@ public class Point {
         return distanceX * distanceX + distanceY * distanceY;
     }
 
-    public int getX() {
+    @Override
+    public String toString() {
+
+        return "{x: " + x + ", y: " + y + "}";
+    }
+
+    public double getX() {
         return x;
     }
 
@@ -89,7 +95,7 @@ public class Point {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
