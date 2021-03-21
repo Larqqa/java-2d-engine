@@ -98,7 +98,7 @@ public final class Renderer {
         boolean[] pixels = Ellipse.plotRotation(xRadius, yRadius, angle, lineWidth);
 
         Point offsetPoint = new Point(point.getX() - xRadius - halfWidth,point.getY() - xRadius - halfWidth);
-        drawDebug(offsetPoint, pixels, xRadius * 2 + lineWidth, color);
+        draw(offsetPoint, pixels, xRadius * 2 + lineWidth, color);
     }
 
     public void ellipseRotate(Point point, int xRadius, int yRadius, int angle, Color color) {
@@ -108,7 +108,7 @@ public final class Renderer {
         boolean[] pixels = Ellipse.fillRotation(xRadius, yRadius, angle, 1);
 
         Point offsetPoint = new Point(point.getX() - xRadius,point.getY() - xRadius);
-        drawDebug(offsetPoint, pixels, xRadius * 2 + 1, color);
+        draw(offsetPoint, pixels, xRadius * 2 + 1, color);
     }
 
     public void ellipse(Point point, int xRadius, int yRadius, Color color) {
@@ -179,6 +179,15 @@ public final class Renderer {
         Point p4 = calculateRectanglePoint(new Point((point.getX() + halfWidth), (point.getY() - halfHeight)), point, angle);
 
         polygon(new ArrayList<>(Arrays.asList(p1, p2, p3, p4)), color);
+    }
+
+    public void drawImage(Point point, Image image) {
+        for(int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                int imageLoc = j * image.getWidth() + i;
+                drawPixel(new Point(i + point.getX(), j + point.getY()), new Color(image.getPixels()[imageLoc]));
+            }
+        }
     }
 
     public void test(){

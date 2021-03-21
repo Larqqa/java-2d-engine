@@ -21,6 +21,13 @@ public class Color {
         this.alpha = alpha;
     }
 
+    public Color(final int color) {
+        alpha = ((color >> 24) & 0xFF) / 255.0;
+        red   = ((color >> 16) & 0xFF) / 255.0;
+        green = ((color >> 8)  & 0xFF) / 255.0;
+        blue  = ((color)       & 0xFF) / 255.0;
+    }
+
     public int colorToInt() {
         return 0xFF000000
             | ((int)(255 * red)   << 16) & 0x00FF0000

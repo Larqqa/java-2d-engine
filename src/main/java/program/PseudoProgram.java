@@ -4,6 +4,7 @@ import engine.Program;
 import engine.controls.Keyboard;
 import engine.controls.Mouse;
 import engine.renderer.Renderer;
+import engine.renderer.shapes.Image;
 import engine.utilities.Color;
 import engine.utilities.Point;
 
@@ -19,8 +20,10 @@ public class PseudoProgram extends Program {
 
     public PseudoProgram() {
         Program.setTitle("title");
-//        Program.setWidth(300);
-        Program.setScale(4.0);
+        Program.setWidth(600);
+        Program.setHeight(600);
+
+        Program.setScale(1.0);
 //        Program.setFrameCap(1.0 / 4);
 
         start();
@@ -33,8 +36,8 @@ public class PseudoProgram extends Program {
 //        HashMap<Integer, String> keys = Mouse.getPressedButtons();
 //        System.out.println(keys.toString());
 //
-//        x = mouse.getMouseX();
-//        y = mouse.getMouseY();
+        x = mouse.getMouseX();
+        y = mouse.getMouseY();
 //
 //        if (mouse.isButtonDown(1)) {
 //            Renderer.getInstance().circle(new Point(x, y), 5, new Color(0.0,0.0,1.0));
@@ -125,8 +128,11 @@ public class PseudoProgram extends Program {
 
 //        r.rectangle(new Point(100, 100), 50, 50, 0 + x2, new Color(1.0,1.0,0.0));
 
-        r.ellipseRotate(new Point(100,100),50, 30, x2, new Color(1.0,1.0,1.0));
-        r.ellipseRotate(new Point(100,100),50, 30, x2, 1, new Color(1.0,1.0,0.0));
+//        r.ellipseRotate(new Point(100,100),50, 30, x2, new Color(1.0,1.0,1.0));
+//        r.ellipseRotate(new Point(100,100),50, 20, x2, 2, new Color(1.0,1.0,0.0));
+
+
+        r.drawImage(new Point(x, y), new Image("./bearly.png"));
 
 //        stop();
     }

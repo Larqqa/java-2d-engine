@@ -147,8 +147,8 @@ public class Ellipse extends Shape {
 
     public static boolean[] fillRotation(int a, int b, int angle, int lineWidth) {
         ArrayList<Point> points = Ellipse.plotEllipsePoints(a, b, angle);
-        points.sort(Comparator.comparingDouble(Point::getY));
         points.sort(Comparator.comparingDouble(Point::getX));
+        points.sort(Comparator.comparingDouble(Point::getY));
 
         a = a * 2 + lineWidth;
         boolean[] pixels = new boolean[a * a];
@@ -159,11 +159,9 @@ public class Ellipse extends Shape {
 
             for (int yLine = (int) p1.getY(); yLine < p2.getY(); yLine++) {
                 for (int xLine = (int) p1.getX(); xLine < p2.getX(); xLine++) {
-                    pixels[yLine * a + xLine] = true;
+                    pixels[xLine * a + yLine] = true;
                 }
             }
-
-            Renderer.getInstance().line(p1, p2, new Color(1.0,1.0,1.0));
         }
 
         return pixels;

@@ -3,9 +3,9 @@ package engine.window;
 import engine.Program;
 import engine.renderer.Renderer;
 
-import java.awt.*;
-import javax.swing.*;
+import javax.swing.JPanel;
 import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
