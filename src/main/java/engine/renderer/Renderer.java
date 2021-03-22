@@ -181,11 +181,15 @@ public final class Renderer {
         polygon(new ArrayList<>(Arrays.asList(p1, p2, p3, p4)), color);
     }
 
+    public void rectangle(Point point, int width, int height, Color color) {
+        rectangle(point,width,height,0,color);
+    }
+
     public void drawImage(Point point, Image image) {
-        for(int j = 0; j < image.getHeight(); j++) {
-            for (int i = 0; i < image.getWidth(); i++) {
-                int imageLoc = j * image.getWidth() + i;
-                drawPixel(new Point(i + point.getX(), j + point.getY()), new Color(image.getPixels()[imageLoc]));
+        for(int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int imageLoc = y * image.getWidth() + x;
+                drawPixel(new Point(x + point.getX(), y + point.getY()), new Color(image.getPixels()[imageLoc]));
             }
         }
     }
@@ -245,5 +249,6 @@ public final class Renderer {
 
         int pixelLocation = (int) (Math.round(point.getY()) * Program.getWidth() + Math.round(point.getX()));
         pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
+        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
     }
 }
