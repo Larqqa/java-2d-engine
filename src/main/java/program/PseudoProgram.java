@@ -135,8 +135,8 @@ public class PseudoProgram extends Program {
 //        r.circle(new Point(400,400), 100,new Color(1.0,0.0,1.0));
         r.rectangle(new Point(100,100), 300, 300, new Color(1.0,1.0,0.0));
 //        r.drawImage(new Point(300,300), new Image("./bearly.png"));
-        r.drawImage(new Point(300, 300), new Image("./bearly.png").rotate(45));
+        r.drawImage(new Point(x, y), new Image("./bearly.png").rotate(angle));
 
-        stop();
+//        stop();
     }
 }

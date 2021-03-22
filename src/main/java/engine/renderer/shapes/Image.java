@@ -44,48 +44,48 @@ public class Image {
 
         double deltaX = -originX;
         double deltaY = -originY;
-        double toplx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double toply = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-        System.out.println(toplx +" "+ toply);
+        double toplx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
+        double toply = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+//        System.out.println(toplx +" "+ toply);
 
         deltaX = width - originX;
         deltaY = -originY;
-        double toprx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double topry = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-        System.out.println(toprx +" "+ topry);
+        double toprx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
+        double topry = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+//        System.out.println(toprx +" "+ topry);
 
         deltaX = -originX;
         deltaY = height - originY;
-        double btlx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double btly = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-        System.out.println(btlx +" "+ btly);
+        double btlx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
+        double btly = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+//        System.out.println(btlx +" "+ btly);
 
         deltaX = width - originX;
         deltaY = height - originY;
-        double btrx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double btry = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-        System.out.println(btrx +" "+ btry);
+        double btrx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
+        double btry = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+//        System.out.println(btrx +" "+ btry);
 
         int minX = (int) Math.min(Math.min(Math.min(toplx, toprx), btlx), btrx);
         int maxX = (int) Math.max(Math.max(Math.max(toplx, toprx), btlx), btrx);
         int minY = (int) Math.min(Math.min(Math.min(toply, topry), btly), btry);
         int maxY = (int) Math.max(Math.max(Math.max(toply, topry), btly), btry);
 
-        System.out.println(minX +" "+ maxX);
-        System.out.println(minX +" "+ maxY);
+//        System.out.println(minX +" "+ maxX);
+//        System.out.println(minX +" "+ maxY);
 
         int offX = Math.abs(maxX) + Math.abs(minX);
         int offY = Math.abs(maxY) + Math.abs(minY);
 
         int[] newPixels = new int[offX * offY];
 
-        for(int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for(int y = 0; y < maxY + Math.abs(minY); y++) {
+            for (int x = 0; x < maxX + Math.abs(minX); x++) {
                 deltaX = x - (originX + Math.abs(minX));
                 deltaY = y - (originY + Math.abs(minY));
 
-                double xa = Math.round(deltaX * cosine - deltaY * sine);
-                double ya = Math.round(deltaX * sine   + deltaY * cosine);
+                double xa = (deltaX * cosine - deltaY * sine);
+                double ya = (deltaX * sine   + deltaY * cosine);
 
                 int newX = (int) (xa + originY);
                 int newY = (int) (ya + originX);

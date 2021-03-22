@@ -189,7 +189,11 @@ public final class Renderer {
         for(int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
                 int imageLoc = y * image.getWidth() + x;
-                drawPixel(new Point(x + point.getX(), y + point.getY()), new Color(image.getPixels()[imageLoc]));
+                drawPixel(
+                    new Point(
+                        Math.round(x + point.getX() - image.getWidth() / 2),
+                        Math.round(y + point.getY() - image.getHeight() / 2)),
+                        new Color(image.getPixels()[imageLoc]));
             }
         }
     }
