@@ -29,10 +29,10 @@ public class Color {
     }
 
     public int colorToInt() {
-        return 0xFF000000
-            | ((int)(255 * red)   << 16) & 0x00FF0000
-            | ((int)(255 * green) << 8)  & 0x0000FF00
-            |  (int)(255 * blue)         & 0x000000FF;
+        return ((int)(255 * alpha) << 24) & 0xFF000000
+             | ((int)(255 * red)   << 16) & 0x00FF0000
+             | ((int)(255 * green) << 8)  & 0x0000FF00
+             |  (int)(255 * blue)         & 0x000000FF;
     }
 
     // https://en.wikipedia.org/wiki/Alpha_compositing#Alpha_blending

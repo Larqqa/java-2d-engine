@@ -53,6 +53,12 @@ Currently implemented:
         * Variable width lines
     * Images
         * Images at an XY position
+        * Rotation
+        * Scaling
+        * Tinting
+     * Sprites
+        * Basic sprite loop
+        * Frame based delay 
 * Mouse controls:
     * XY location
     * Scroll wheel

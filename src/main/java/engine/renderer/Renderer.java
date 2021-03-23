@@ -191,8 +191,8 @@ public final class Renderer {
                 int imageLoc = y * image.getWidth() + x;
                 drawPixel(
                     new Point(
-                        Math.round(x + point.getX() - image.getWidth() / 2),
-                        Math.round(y + point.getY() - image.getHeight() / 2)),
+                        Math.round(x + point.getX() - (double) image.getWidth() / 2),
+                        Math.round(y + point.getY() - (double) image.getHeight() / 2)),
                         new Color(image.getPixels()[imageLoc]));
             }
         }
@@ -253,6 +253,6 @@ public final class Renderer {
 
         int pixelLocation = (int) (Math.round(point.getY()) * Program.getWidth() + Math.round(point.getX()));
         pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
-        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
+//        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
     }
 }

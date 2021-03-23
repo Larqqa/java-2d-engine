@@ -44,26 +44,26 @@ public class Image {
 
         double deltaX = -originX;
         double deltaY = -originY;
-        double toplx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
-        double toply = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+        double toplx = Math.round(deltaX * cosine - deltaY * sine) + originX;
+        double toply = Math.round(deltaX * sine   + deltaY * cosine) + originY;
 //        System.out.println(toplx +" "+ toply);
 
         deltaX = width - originX;
         deltaY = -originY;
-        double toprx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
-        double topry = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+        double toprx = Math.round(deltaX * cosine - deltaY * sine) + originX;
+        double topry = Math.round(deltaX * sine   + deltaY * cosine) + originY;
 //        System.out.println(toprx +" "+ topry);
 
         deltaX = -originX;
         deltaY = height - originY;
-        double btlx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
-        double btly = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+        double btlx = Math.round(deltaX * cosine - deltaY * sine) + originX;
+        double btly = Math.round(deltaX * sine   + deltaY * cosine) + originY;
 //        System.out.println(btlx +" "+ btly);
 
         deltaX = width - originX;
         deltaY = height - originY;
-        double btrx = Math.floor(deltaX * cosine - deltaY * sine) + originX;
-        double btry = Math.floor(deltaX * sine   + deltaY * cosine) + originY;
+        double btrx = Math.round(deltaX * cosine - deltaY * sine) + originX;
+        double btry = Math.round(deltaX * sine   + deltaY * cosine) + originY;
 //        System.out.println(btrx +" "+ btry);
 
         int minX = (int) Math.min(Math.min(Math.min(toplx, toprx), btlx), btrx);
@@ -106,6 +106,45 @@ public class Image {
         pixels = newPixels;
         width = offX;
         height = offY;
+        return this;
+    }
+
+    // https://tech-algorithm.com/articles/nearest-neighbor-image-scaling/
+    public Image scale(double xScale, double yScale) {
+        int scaledWidth = (int) Math.round(width * xScale);
+        int scaledHeight = (int) Math.round(height * yScale);
+        int[] newPixels = new int[scaledWidth * scaledHeight];
+
+        double widthRatio = (double) width / scaledWidth;
+        double heightRatio = (double) height / scaledHeight;
+
+        for (int i = 0; i < scaledHeight; i++) {
+            for (int j = 0; j < scaledWidth; j++) {
+                newPixels[i * scaledWidth + j] = pixels[(int) (Math.floor(i * heightRatio) * width + Math.floor(j * widthRatio))];
+            }
+        }
+
+        pixels = newPixels;
+        width = scaledWidth;
+        height = scaledHeight;
+        return this;
+    }
+
+    public Image scale(double scale) {
+        return scale(scale, scale);
+    }
+
+    public Image tint(Color color) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Color originalColor = new Color(pixels[i * width + j]);
+
+                if (originalColor.getAlpha() > 0) {
+                    pixels[i * width + j] = originalColor.alphaBlend(color.colorToInt());
+                }
+            }
+        }
+
         return this;
     }
 
