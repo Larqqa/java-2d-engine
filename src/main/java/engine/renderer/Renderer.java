@@ -198,6 +198,13 @@ public final class Renderer {
         }
     }
 
+    public void drawSprite(Point p, Sprite sprite) {
+        Image img = sprite.getSprites().get(sprite.getLoopCounter());
+        drawImage(p, img);
+
+        sprite.incrementLoopCounter();
+    }
+
     public void test(){
         for(int y = 0; y < Program.getHeight(); y++) {
             for(int x = 0; x < Program.getWidth(); x++) {
@@ -253,6 +260,6 @@ public final class Renderer {
 
         int pixelLocation = (int) (Math.round(point.getY()) * Program.getWidth() + Math.round(point.getX()));
         pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
-//        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
+        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
     }
 }

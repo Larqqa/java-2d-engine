@@ -1,6 +1,7 @@
 package engine.renderer.shapes;
 
 import engine.utilities.Color;
+import engine.utilities.MinMax;
 import engine.utilities.Point;
 
 import javax.imageio.ImageIO;
@@ -8,12 +9,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Image {
     private int[] pixels;
     private int width;
     private int height;
+    private int[] originalPixels;
+    private int originalWidth;
+    private int originalHeight;
 
     public Image(String path) {
         try {
@@ -21,7 +27,10 @@ public class Image {
             BufferedImage image = ImageIO.read(Objects.requireNonNull(classloader.getResourceAsStream(path)));
             width = image.getWidth();
             height = image.getHeight();
+            originalWidth = width;
+            originalHeight = height;
             pixels = image.getRGB(0, 0, width, height, null, 0, width);
+            originalPixels = pixels;
         } catch (IOException e) {
             System.out.println(e);
             System.exit(1);
@@ -32,6 +41,16 @@ public class Image {
         this.pixels = pixels;
         this.width = width;
         this.height = height;
+        originalPixels = pixels;
+        originalWidth = width;
+        originalHeight = height;
+    }
+
+    private Point getCorner(double deltaX, double deltaY, double originX, double originY, double sine, double cosine) {
+        double x = (deltaX * cosine - deltaY * sine);
+        double y = (deltaX * sine   + deltaY * cosine);
+
+        return new Point(x, y);
     }
 
     // https://stackoverflow.com/questions/29739809/java-rotation-of-pixel-array
@@ -39,88 +58,62 @@ public class Image {
         angle = angle * Math.PI / 180;
         double cosine = Math.cos(-angle);
         double sine = Math.sin(-angle);
-        int originX = width / 2;
-        int originY = height / 2;
+        double originX = (double) originalWidth / 2;
+        double originY = (double) originalHeight / 2;
 
-        double deltaX = -originX;
-        double deltaY = -originY;
-        double toplx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double toply = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-//        System.out.println(toplx +" "+ toply);
+        ArrayList<Point> corners = new ArrayList<>(Arrays.asList(
+            getCorner(-originX, -originY, originX, originY, sine, cosine),
+            getCorner(originalWidth - originX, -originY, originX, originY, sine, cosine),
+            getCorner(-originX, originalHeight - originY, originX, originY, sine, cosine),
+            getCorner(originalWidth - originX, originalHeight - originY, originX, originY, sine, cosine)
+        ));
 
-        deltaX = width - originX;
-        deltaY = -originY;
-        double toprx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double topry = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-//        System.out.println(toprx +" "+ topry);
+        MinMax minMax = new MinMax(corners, 0);
 
-        deltaX = -originX;
-        deltaY = height - originY;
-        double btlx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double btly = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-//        System.out.println(btlx +" "+ btly);
+        int totalWidth = Math.round(minMax.getMaxX() + Math.abs(minMax.getMinX()));
+        int totalHeight = Math.round(minMax.getMaxY() + Math.abs(minMax.getMinY()));
 
-        deltaX = width - originX;
-        deltaY = height - originY;
-        double btrx = Math.round(deltaX * cosine - deltaY * sine) + originX;
-        double btry = Math.round(deltaX * sine   + deltaY * cosine) + originY;
-//        System.out.println(btrx +" "+ btry);
+        int[] newPixels = new int[totalWidth * totalHeight];
 
-        int minX = (int) Math.min(Math.min(Math.min(toplx, toprx), btlx), btrx);
-        int maxX = (int) Math.max(Math.max(Math.max(toplx, toprx), btlx), btrx);
-        int minY = (int) Math.min(Math.min(Math.min(toply, topry), btly), btry);
-        int maxY = (int) Math.max(Math.max(Math.max(toply, topry), btly), btry);
+        for(int y = 0; y < totalHeight; y++) {
+            for (int x = 0; x < totalWidth; x++) {
+                double deltaX = Math.round(x - (Math.abs(minMax.getMinX())));
+                double deltaY = Math.round(y - (Math.abs(minMax.getMinY())));
 
-//        System.out.println(minX +" "+ maxX);
-//        System.out.println(minX +" "+ maxY);
+                double xa = deltaX * cosine - deltaY * sine;
+                double ya = deltaX * sine   + deltaY * cosine;
 
-        int offX = Math.abs(maxX) + Math.abs(minX);
-        int offY = Math.abs(maxY) + Math.abs(minY);
+                int newX = (int)Math.floor(xa + originX);
+                int newY = (int)Math.floor(ya + originY);
 
-        int[] newPixels = new int[offX * offY];
+                if (newX < 0 || newX > originalWidth - 1) continue;
+                if (newY < 0 || newY > originalHeight - 1) continue;
 
-        for(int y = 0; y < maxY + Math.abs(minY); y++) {
-            for (int x = 0; x < maxX + Math.abs(minX); x++) {
-                deltaX = x - (originX + Math.abs(minX));
-                deltaY = y - (originY + Math.abs(minY));
-
-                double xa = (deltaX * cosine - deltaY * sine);
-                double ya = (deltaX * sine   + deltaY * cosine);
-
-                int newX = (int) (xa + originY);
-                int newY = (int) (ya + originX);
-
-                if (newX < 0 || newX > width - 1) continue;
-                if (newY < 0 || newY > height - 1) continue;
-
-                int imageLoc = (newY) * width + (newX);
-                if (imageLoc < 0 || imageLoc > pixels.length - 1) continue;
-
-                int pixelLoc = y * offX + x;
-                if (pixelLoc < 0 || pixelLoc > newPixels.length - 1) continue;
-
-                newPixels[pixelLoc] = pixels[imageLoc];
+                newPixels[y * totalWidth + x] = originalPixels[newY * originalWidth + newX];
             }
         }
 
         pixels = newPixels;
-        width = offX;
-        height = offY;
+        width = totalWidth;
+        height = totalHeight;
         return this;
     }
 
     // https://tech-algorithm.com/articles/nearest-neighbor-image-scaling/
     public Image scale(double xScale, double yScale) {
-        int scaledWidth = (int) Math.round(width * xScale);
-        int scaledHeight = (int) Math.round(height * yScale);
+        int scaledWidth = (int) Math.round(originalWidth * xScale);
+        int scaledHeight = (int) Math.round(originalHeight * yScale);
         int[] newPixels = new int[scaledWidth * scaledHeight];
 
-        double widthRatio = (double) width / scaledWidth;
-        double heightRatio = (double) height / scaledHeight;
+        double widthRatio = (double) originalWidth / scaledWidth;
+        double heightRatio = (double) originalHeight / scaledHeight;
 
+        int newPixel, oldPixel;
         for (int i = 0; i < scaledHeight; i++) {
             for (int j = 0; j < scaledWidth; j++) {
-                newPixels[i * scaledWidth + j] = pixels[(int) (Math.floor(i * heightRatio) * width + Math.floor(j * widthRatio))];
+                newPixel = i * scaledWidth + j;
+                oldPixel = (int) (Math.floor(i * heightRatio) * originalWidth + Math.floor(j * widthRatio));
+                newPixels[newPixel] = originalPixels[oldPixel];
             }
         }
 
@@ -145,6 +138,13 @@ public class Image {
             }
         }
 
+        return this;
+    }
+
+    public Image reset() {
+        pixels = originalPixels;
+        width = originalWidth;
+        height = originalHeight;
         return this;
     }
 

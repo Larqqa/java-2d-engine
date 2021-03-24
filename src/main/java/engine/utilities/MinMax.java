@@ -24,6 +24,10 @@ public class MinMax {
         maxY += offSet;
     }
 
+    public String toString() {
+        return "{ minX: " + minX +", minY: "+ minY +", maxX: "+ maxX +", maxY: "+ maxY +"}";
+    }
+
     public int width() {
         return maxX - minX;
     }

@@ -4,39 +4,93 @@ import engine.renderer.Renderer;
 import engine.utilities.Color;
 import engine.utilities.Point;
 
+import java.util.ArrayList;
+
 public class Sprite {
-    private Image sprite;
+    private Image spriteSheet;
+    private ArrayList<Image> sprites;
+
     private int width;
     private int height;
     private int spriteWidth;
     private int spriteHeight;
-    private int loopCounter = 0;
-    private int loopLength;
+    private final int loopLength;
+    private final int frameDelay;
     private int offsetCounter = 0;
-    private int frameDelay;
+    private int loopCounter = 0;
 
-    public Sprite(String path, int spriteWidth, int spriteHeight, int frameDelay) {
-        sprite = new Image(path);
-        width = sprite.getWidth();
-        height = sprite.getWidth();
+    public Sprite(final String path, final int spriteWidth, final int spriteHeight, final int frameDelay) {
+        spriteSheet = new Image(path);
+        width = spriteSheet.getWidth();
+        height = spriteSheet.getWidth();
+        loopLength = width / spriteWidth;
         this.spriteWidth = spriteWidth;
         this.spriteHeight = spriteHeight;
         this.frameDelay = frameDelay;
-        loopLength = width / spriteWidth;
+
+        sprites = new ArrayList<>();
+        for (int l = 0; l < loopLength; l++) {
+            int[] pixels = new int[spriteWidth * spriteHeight];
+
+            for (int y = 0; y < spriteHeight; y++) {
+                for (int x = (spriteWidth * l); x < spriteWidth + (spriteWidth * l); x++) {
+                    pixels[y * spriteWidth + (x - (spriteWidth * l))] = spriteSheet.getPixels()[y * width + x];
+                }
+            }
+
+            sprites.add(new Image(pixels, spriteWidth, spriteHeight));
+        }
     }
 
-    public void draw(Renderer r, Point p) {
-        for (int y = 0; y < spriteHeight; y++) {
-            for (int x = (spriteWidth * loopCounter); x < spriteWidth + (spriteWidth * loopCounter); x++) {
-                Point np = new Point(p.getX() + x - (spriteWidth * loopCounter),p.getY()+ y);
-                r.drawPixel(np, new Color(sprite.getPixels()[y * sprite.getWidth() + x]));
-            }
+    public void scale(double scale) {
+        for (Image sprite : sprites) {
+            sprite.scale(scale);
         }
+    }
 
+    public void scale(double xScale, double yScale) {
+        for (Image sprite : sprites) {
+            sprite.scale(xScale, yScale);
+        }
+    }
+
+    public void tint(Color color) {
+        for (Image sprite : sprites) {
+            sprite.tint(color);
+        }
+    }
+
+    public void rotate(double angle) {
+        for (Image sprite : sprites) {
+            sprite.rotate(angle);
+        }
+    }
+
+    public void incrementLoopCounter() {
         offsetCounter++;
         if (offsetCounter % frameDelay == 0) {
             loopCounter++;
             if (loopCounter == loopLength) loopCounter = 0;
         }
+    }
+
+    public int getSpriteWidth() {
+        return spriteWidth;
+    }
+
+    public int getSpriteHeight() {
+        return spriteHeight;
+    }
+
+    public int getLoopCounter() {
+        return loopCounter;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public ArrayList<Image> getSprites() {
+        return sprites;
     }
 }

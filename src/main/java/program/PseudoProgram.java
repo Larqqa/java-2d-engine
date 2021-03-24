@@ -19,6 +19,7 @@ public class PseudoProgram extends Program {
     private int x = 100;
     private int y = 100;
     Sprite s = new Sprite("./sprite.png", 32, 32, 5);
+    Image img = new Image("./bearly.png");
 
     public PseudoProgram() {
         Program.setTitle("title");
@@ -26,7 +27,9 @@ public class PseudoProgram extends Program {
         Program.setHeight(600);
 
         Program.setScale(1.0);
-//        Program.setFrameCap(1.0 / 4);
+//        Program.setFrameCap(1.0 / 24);
+
+        s.scale(3);
 
         start();
     }
@@ -137,10 +140,15 @@ public class PseudoProgram extends Program {
 //        r.circle(new Point(400,400), 100,new Color(1.0,0.0,1.0));
 //        r.rectangle(new Point(100,100), 300, 300, new Color(1.0,1.0,0.0));
 //        r.drawImage(new Point(300,300), new Image("./bearly.png"));
-//        r.drawImage(new Point(x, y), new Image("./bearly.png"));
-//        r.drawImage(new Point(x, y), new Image("./bearly.png").rotate(angle).scale((double) x2 / 30).tint(new Color(1.0,1.0,0.0, 0.3)));
+//        r.drawImage(new Point(300,300), new Image("./bearly.png").rotate(angle));
+//        r.drawImage(new Point(x, y), new Image("./bearly.png").tint(new Color(1.0,1.0,0.0, 0.3)));
 
-        s.draw(r, new Point(x,y));
+//        r.drawImage(new Point(300,300), new Image("./bearly.png").rotate(angle));
+
+//        r.drawImage(new Point(300,300), img.rotate(angle));
+//        r.drawImage(new Point(300,300), img.scale(1.1));
+        
+        r.drawSprite(new Point(300, 300), s);
 
 //        stop();
     }

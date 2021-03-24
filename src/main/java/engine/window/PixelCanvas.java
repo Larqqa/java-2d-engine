@@ -3,14 +3,15 @@ package engine.window;
 import engine.Program;
 import engine.renderer.Renderer;
 
-import javax.swing.JPanel;
+import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
+import java.util.Objects;
 
-public class PixelCanvas extends JPanel {
+public class PixelCanvas extends Canvas {
 
     private final BufferedImage image;
     private final int[] pixels;
@@ -27,20 +28,24 @@ public class PixelCanvas extends JPanel {
         Arrays.fill(pixels, Program.getClearColor());
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void repaint() {
+        Graphics g = null;
+        try {
+            g = this.getBufferStrategy().getDrawGraphics();
 
-        g.drawImage(
-                image,
-                insets.left,
-                insets.right,
-                (int)(Program.getWidth() * Program.getScale()),
-                (int)(Program.getHeight() * Program.getScale()),
-                this
-        );
+            g.drawImage(
+                    image,
+                    insets.left,
+                    insets.right,
+                    (int)(Program.getWidth() * Program.getScale()),
+                    (int)(Program.getHeight() * Program.getScale()),
+                    null
+            );
+        } finally {
+            if (Objects.nonNull(g)) g.dispose();
+        }
 
-        g.dispose();
+        this.getBufferStrategy().show();
     }
 
     public int[] getPixels() {

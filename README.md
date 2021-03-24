@@ -53,12 +53,19 @@ Currently implemented:
         * Variable width lines
     * Images
         * Images at an XY position
+        * Transformations are done from original image
         * Rotation
         * Scaling
         * Tinting
+        * Reset to original
      * Sprites
         * Basic sprite loop
-        * Frame based delay 
+        * Frame based delay
+        * Sprites are handled as an image array
+        * Scaling
+        * Tinting
+        * Rotation
+        * Reset to original
 * Mouse controls:
     * XY location
     * Scroll wheel
@@ -66,5 +73,5 @@ Currently implemented:
 * Keyboard controls:
     * Pressed key hashmap<keyCode, value>
 * The window is a Swing JFrame
-* The pixel canvas is a Swing JPanel
+* The pixel canvas is a Swing Canvas
     * The drawing happens through a bufferedImage from the canvas

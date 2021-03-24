@@ -9,8 +9,8 @@ import java.awt.Insets;
 
 public class Window extends JFrame {
 
-    final private JFrame frame;
-    final private PixelCanvas canvas;
+    private final JFrame frame;
+    private final PixelCanvas canvas;
     private final int scaledWidth;
     private final int scaledHeight;
 
@@ -25,20 +25,20 @@ public class Window extends JFrame {
 
         frame.setVisible(true);
         frame.requestFocus();
+        canvas.createBufferStrategy(2);
 
         Insets insets = frame.getInsets();
 
         Keyboard keyListener = Keyboard.getInstance();
-        frame.addKeyListener(keyListener);
+        canvas.addKeyListener(keyListener);
 
         Mouse mouseListener = Mouse.getInstance(insets);
-        frame.addMouseListener(mouseListener);
-        frame.addMouseMotionListener(mouseListener);
-        frame.addMouseWheelListener(mouseListener);
+        canvas.addMouseListener(mouseListener);
+        canvas.addMouseMotionListener(mouseListener);
+        canvas.addMouseWheelListener(mouseListener);
 
         scaledWidth = insets.left + insets.right + (int)(Program.getWidth() * Program.getScale());
         scaledHeight = insets.left + insets.right + ((int)(Program.getHeight() * Program.getScale()) + (insets.top - 1));
-        refresh();
         refresh();
     }
 
