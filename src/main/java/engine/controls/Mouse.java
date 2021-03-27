@@ -1,9 +1,7 @@
 package engine.controls;
 
-import engine.Program;
-import engine.renderer.Renderer;
+import engine.program.Program;
 
-import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -19,29 +17,18 @@ public final class Mouse implements MouseListener, MouseMotionListener, MouseWhe
     private int mouseY;
     private int wheelDirection;
     private int wheelAmount;
-    private final Insets insets;
     private static Mouse instance;
 
-    public Mouse(final Insets insets) {
-        this.insets =  insets;
-    }
-
-    public static Mouse getInstance(Insets insets) {
+    public static Mouse getInstance() {
         if(Objects.isNull(instance)) {
-            instance = new Mouse(insets);
+            instance = new Mouse();
         }
 
         return instance;
     }
 
-    public static Mouse getInstance() {
-        if(Objects.isNull(instance)) return null;
-        return instance;
-    }
-
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
-        System.out.println("yeet");
         pressedButtons.put(mouseEvent.getButton(), "");
     }
 
@@ -53,7 +40,7 @@ public final class Mouse implements MouseListener, MouseMotionListener, MouseWhe
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         mouseX = (int) (mouseEvent.getX() / Program.getScale());
-        mouseY = (int) ((mouseEvent.getY() - (insets.top - 1)) / Program.getScale());
+        mouseY = (int) (mouseEvent.getY() / Program.getScale());
     }
 
     @Override

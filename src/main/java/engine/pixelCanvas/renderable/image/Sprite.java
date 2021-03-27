@@ -1,26 +1,23 @@
-package engine.renderer.shapes;
+package engine.pixelCanvas.renderable.image;
 
-import engine.renderer.Renderer;
 import engine.utilities.Color;
-import engine.utilities.Point;
 
 import java.util.ArrayList;
 
 public class Sprite {
-    private Image spriteSheet;
-    private ArrayList<Image> sprites;
+    private final ArrayList<Image> sprites;
 
-    private int width;
-    private int height;
-    private int spriteWidth;
-    private int spriteHeight;
+    private final int width;
+    private final int height;
+    private final int spriteWidth;
+    private final int spriteHeight;
     private final int loopLength;
     private final int frameDelay;
     private int offsetCounter = 0;
     private int loopCounter = 0;
 
     public Sprite(final String path, final int spriteWidth, final int spriteHeight, final int frameDelay) {
-        spriteSheet = new Image(path);
+        Image spriteSheet = new Image(path);
         width = spriteSheet.getWidth();
         height = spriteSheet.getWidth();
         loopLength = width / spriteWidth;

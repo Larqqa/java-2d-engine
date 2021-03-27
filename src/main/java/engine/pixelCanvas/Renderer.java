@@ -1,35 +1,28 @@
-package engine.renderer;
+package engine.pixelCanvas;
 
-import engine.renderer.shapes.*;
+import engine.pixelCanvas.renderable.image.Image;
+import engine.pixelCanvas.renderable.image.Sprite;
+import engine.pixelCanvas.renderable.shapes.BezierCurve;
+import engine.pixelCanvas.renderable.shapes.Circle;
+import engine.pixelCanvas.renderable.shapes.Ellipse;
+import engine.pixelCanvas.renderable.shapes.Line;
+import engine.pixelCanvas.renderable.shapes.Polygon;
+import engine.pixelCanvas.renderable.shapes.Triangle;
 import engine.utilities.Color;
-import engine.Program;
+import engine.program.Program;
 import engine.utilities.MinMax;
 import engine.utilities.Point;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
-public final class Renderer {
+public class Renderer {
 
     private final int[] pixels;
     private static Renderer instance;
 
-    private Renderer(final int[] pixels) {
+    public Renderer(final int[] pixels) {
         this.pixels = pixels;
-    }
-
-    public static Renderer getInstance(int[] pixels) {
-        if(Objects.isNull(instance)) {
-            instance = new Renderer(pixels);
-        }
-
-        return instance;
-    }
-
-    public static Renderer getInstance() {
-        if(Objects.isNull(instance)) return null;
-        return instance;
     }
 
     public void clear() {
@@ -260,6 +253,6 @@ public final class Renderer {
 
         int pixelLocation = (int) (Math.round(point.getY()) * Program.getWidth() + Math.round(point.getX()));
         pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
-        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
+//        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
     }
 }

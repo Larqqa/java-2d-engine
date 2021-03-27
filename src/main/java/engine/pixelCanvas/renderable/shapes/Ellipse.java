@@ -1,9 +1,5 @@
-package engine.renderer.shapes;
+package engine.pixelCanvas.renderable.shapes;
 
-import engine.Program;
-import engine.renderer.Renderer;
-import engine.utilities.Color;
-import engine.utilities.MinMax;
 import engine.utilities.Point;
 
 import java.util.ArrayList;

@@ -1,155 +1,67 @@
 package program;
 
-import engine.Program;
 import engine.controls.Keyboard;
 import engine.controls.Mouse;
-import engine.renderer.Renderer;
-import engine.renderer.shapes.Image;
-import engine.renderer.shapes.Sprite;
-import engine.utilities.Color;
+import engine.pixelCanvas.PixelCanvas;
+import engine.pixelCanvas.renderable.image.Sprite;
+import engine.program.Program;
+import engine.utilities.Colors;
 import engine.utilities.Point;
-
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.HashMap;
+import engine.window.Window;
 
 public class PseudoProgram extends Program {
 
-    private int angle = 0;
-    private int x = 100;
-    private int y = 100;
-    Sprite s = new Sprite("./sprite.png", 32, 32, 5);
-    Image img = new Image("./bearly.png");
+    private final Window w;
+    private final PixelCanvas p;
+    private final Mouse m;
+    private final Keyboard k;
+
+    private final Point mouse = new Point(0,0);
+    private final Point keyboard = new Point(200,200);
+
+    private final Sprite s = new Sprite("sprite.png", 32,32, 5);
 
     public PseudoProgram() {
-        Program.setTitle("title");
-        Program.setWidth(600);
-        Program.setHeight(600);
+        Program.setWidth(16);
+        Program.setHeight(8);
+        Program.setScale(120.0);
 
-        Program.setScale(1.0);
-//        Program.setFrameCap(1.0 / 24);
-
-        s.scale(3);
+        w = new Window();
+        p = new PixelCanvas(w);
+        p.addMouseListener();
+        p.addKeyboardListener();
+        k = Keyboard.getInstance();
+        m = Mouse.getInstance();
 
         start();
     }
 
     @Override
-    public void update(Mouse mouse, Keyboard keyboard) {
-//        int wheel = mouse.getWheelDirection();
+    public void update() {
+        mouse.setX(m.getMouseX());
+        mouse.setY(m.getMouseY());
 
-//        HashMap<Integer, String> keys = Mouse.getPressedButtons();
-//        System.out.println(keys.toString());
-//
-        x = mouse.getMouseX();
-        y = mouse.getMouseY();
-//
-//        if (mouse.isButtonDown(1)) {
-//            Renderer.getInstance().circle(new Point(x, y), 5, new Color(0.0,0.0,1.0));
-//        }
-//
-//        if (mouse.isButtonDown(2)) {
-//            Renderer.getInstance().circle(new Point(x, y), 5, new Color(0.0,1.0,0.0));
-//        }
-//
-//        if (mouse.isButtonDown(3)) {
-//            Renderer.getInstance().circle(new Point(x, y), 5, new Color(1.0,0.0,0.0));
-//        }
+        if (k.isKeyDown(87)) {
+            keyboard.setY(keyboard.getY() + 1);
+        }
+        if (k.isKeyDown(83)) {
+            keyboard.setY(keyboard.getY() - 1);
+        }
 
-//        HashMap<Integer, String> keys = Keyboard.getPressedKeys();
-//        System.out.println(keys.toString());
-////        System.out.println(keys.containsKey(65));
-//
-//        if (keys.containsKey(65)) {
-//            x -= 1;
-//        } else if (keys.containsKey(68)) {
-//            x += 1;
-//        }
-//
-//        if (keys.containsKey(83)) {
-//            y += 1;
-//        } else if (keys.containsKey(87)) {
-//            y -= 1;
-//        }
+        if (k.isKeyDown(65)) {
+            keyboard.setX(keyboard.getX() - 1);
+        }
+        if (k.isKeyDown(68)) {
+            keyboard.setX(keyboard.getX() + 1);
+        }
     }
 
     @Override
-    public void render(Renderer r){
-//        r.clear();
-        r.clear(new Color(0.5,0.5,1.0));
-//        r.test();
-
-//        r.circleFill(new Point(x,y), 50,new Color(1.0,1.0,0.0, 0.5));
-//
-        int rad = 40;
-        double d = angle * Math.PI / 180;
-        int x2 = (int)(rad * Math.cos(d));
-        int y2 = (int)(rad * Math.sin(d));
-        angle++;
-
-//        r.line(new Point(100,100), new Point(100 + x2,100 + y2), 5, new Color(1.0,0.0,0.0));
-//        r.line(new Point(100,100), new Point(100 + x2,100 + y2), new Color(0.0,1.0,0.0));
-
-//        r.circle(new Point(100,100), 50,new Color(1.0,1.0,0.0, 0.5));
-//        r.circle(new Point(100,100), 50, 1, new Color(0.0,0.0,1.0, 0.5));
-
-//        r.triangle(
-//                new Point(50 + x2,100 - y2),
-//                new Point(100,100 + y2),
-//                new Point(150 - x2,150 + y2),
-//                new Color(1.0,1.0,0.0));
-//        r.triangle(
-//                new Point(50 + x2,100 - y2),
-//                new Point(100,100 + y2),
-//                new Point(150 - x2,150 + y2),
-//                1, new Color(0.0,1.0,0.0));
-
-//        ArrayList<Point> points = new ArrayList<Point>();
-//        points.add(new Point(100,30));
-//        points.add(new Point(100 + x2, 50 + y2));
-//        points.add(new Point(120 - x2,50 - y2));
-//        points.add(new Point(120,30));
-//        points.add(new Point(130 + x2,70));
-//        points.add(new Point(70,60 + y2));
-//        r.polygon(points, new Color(1.0,0.0,1.0, 0.5));
-//        r.polygon(points, 1, new Color(0.0,1.0,1.0, 1.0));
-
-//        ArrayList<Point> points = new ArrayList<Point>();
-//        points.add(new Point(100,30));
-//        points.add(new Point(120,30));
-//        points.add(new Point(120,50));
-//        points.add(new Point(100,50));
-//
-//        r.polygon(points, new Color(0.0,1.0,1.0, 0.5));
-
-//        r.ellipse(new Point(100,100),50, 30, 1, new Color(1.0,1.0,1.0));
-
-//        ArrayList<Point> points = new ArrayList<Point>();
-//        points.add(new Point(50,50));
-//        points.add(new Point(60,80));
-//        points.add(new Point(100,20));
-//        points.add(new Point(130,100));
-//        r.bezierLine(points, 1, new Color(1.0,1.0,1.0));
-
-//        r.rectangle(new Point(100, 100), 50, 50, 0 + x2, new Color(1.0,1.0,0.0));
-
-//        r.ellipseRotate(new Point(100,100),50, 30, x2, new Color(1.0,1.0,1.0));
-//        r.ellipseRotate(new Point(100,100),50, 20, x2, 2, new Color(1.0,1.0,0.0));
-
-
-//        r.circle(new Point(400,400), 100,new Color(1.0,0.0,1.0));
-//        r.rectangle(new Point(100,100), 300, 300, new Color(1.0,1.0,0.0));
-//        r.drawImage(new Point(300,300), new Image("./bearly.png"));
-//        r.drawImage(new Point(300,300), new Image("./bearly.png").rotate(angle));
-//        r.drawImage(new Point(x, y), new Image("./bearly.png").tint(new Color(1.0,1.0,0.0, 0.3)));
-
-//        r.drawImage(new Point(300,300), new Image("./bearly.png").rotate(angle));
-
-//        r.drawImage(new Point(300,300), img.rotate(angle));
-//        r.drawImage(new Point(300,300), img.scale(1.1));
-        
-        r.drawSprite(new Point(300, 300), s);
-
-//        stop();
+    public void render(){
+        p.getRenderer().test();
+//        p.getRenderer().circle(mouse, 30, Colors.blue());
+//        p.getRenderer().circle(keyboard, 30, Colors.green());
+//        p.getRenderer().drawSprite(keyboard, s);
+        p.paint();
     }
 }

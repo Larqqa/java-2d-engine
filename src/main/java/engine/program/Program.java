@@ -1,36 +1,30 @@
-package engine;
+package engine.program;
 
-import engine.controls.Keyboard;
-import engine.controls.Mouse;
-import engine.renderer.Renderer;
+public class Program implements Programmable {
 
-public abstract class Program {
     private static String title = "Game Engine";
     private static int clearColor = 0xFF000000;
-    private static int width = 200;
+    private static int width = 400;
     private static int height = 200;
     private static double scale = 2.0;
     private static double frameCap = 1.0 / 60.0;
-
-    private Engine engine;
-    private boolean initialized = false;
+    private final Engine engine = Engine.getInstance(this);
 
     public void start() {
-        if (!initialized) {
-            engine = Engine.getInstance(this);
-            initialized = true;
-        }
-
         engine.start();
     }
 
     public void stop() {
         engine.stop();
-        System.out.println("Stopped");
     }
 
-    abstract public void update(Mouse mouse, Keyboard keyboard);
-    abstract public void render(Renderer renderer);
+    @Override
+    public void update() {
+    }
+
+    @Override
+    public void render() {
+    }
 
     public static String getTitle() {
         return title;

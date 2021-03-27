@@ -1,8 +1,6 @@
 package engine.window;
 
-import engine.Program;
-import engine.controls.Keyboard;
-import engine.controls.Mouse;
+import engine.program.Program;
 
 import javax.swing.JFrame;
 import java.awt.Insets;
@@ -10,35 +8,30 @@ import java.awt.Insets;
 public class Window extends JFrame {
 
     private final JFrame frame;
-    private final PixelCanvas canvas;
     private final int scaledWidth;
     private final int scaledHeight;
+    private final int width;
+    private final int height;
+    private final String title;
+    private final double scale;
 
     public Window() {
-        frame = new JFrame(Program.getTitle());
+        title = Program.getTitle();
+        width = Program.getWidth();
+        height = Program.getHeight();
+        scale = Program.getScale();
+
+        frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(Program.getWidth(), Program.getHeight());
+        frame.setSize(width, height);
         frame.setResizable(false);
-
-        canvas = new PixelCanvas(this);
-        frame.add(canvas);
-
         frame.setVisible(true);
         frame.requestFocus();
-        canvas.createBufferStrategy(2);
 
         Insets insets = frame.getInsets();
 
-        Keyboard keyListener = Keyboard.getInstance();
-        canvas.addKeyListener(keyListener);
-
-        Mouse mouseListener = Mouse.getInstance(insets);
-        canvas.addMouseListener(mouseListener);
-        canvas.addMouseMotionListener(mouseListener);
-        canvas.addMouseWheelListener(mouseListener);
-
-        scaledWidth = insets.left + insets.right + (int)(Program.getWidth() * Program.getScale());
-        scaledHeight = insets.left + insets.right + ((int)(Program.getHeight() * Program.getScale()) + (insets.top - 1));
+        scaledWidth = insets.left + insets.right + (int)(width * scale);
+        scaledHeight = insets.left + insets.right + ((int)(height * scale) + (insets.top - 1));
         refresh();
     }
 
@@ -52,9 +45,5 @@ public class Window extends JFrame {
 
     public JFrame getFrame() {
         return frame;
-    }
-
-    public PixelCanvas getCanvas() {
-        return canvas;
     }
 }

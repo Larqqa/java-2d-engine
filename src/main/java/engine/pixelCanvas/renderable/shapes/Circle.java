@@ -1,4 +1,4 @@
-package engine.renderer.shapes;
+package engine.pixelCanvas.renderable.shapes;
 
 import engine.utilities.Point;
 

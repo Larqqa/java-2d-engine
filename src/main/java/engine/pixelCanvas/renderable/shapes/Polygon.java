@@ -1,6 +1,5 @@
-package engine.renderer.shapes;
+package engine.pixelCanvas.renderable.shapes;
 
-import engine.Program;
 import engine.utilities.MinMax;
 import engine.utilities.Point;
 

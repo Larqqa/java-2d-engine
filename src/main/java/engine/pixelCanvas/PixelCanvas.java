@@ -1,14 +1,15 @@
-package engine.window;
+package engine.pixelCanvas;
 
-import engine.Program;
-import engine.renderer.Renderer;
+import engine.controls.Keyboard;
+import engine.controls.Mouse;
+import engine.program.Program;
+import engine.window.Window;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class PixelCanvas extends Canvas {
@@ -16,20 +17,24 @@ public class PixelCanvas extends Canvas {
     private final BufferedImage image;
     private final int[] pixels;
     private final Insets insets;
+    private final Renderer renderer;
+    private final Window window;
 
-    PixelCanvas(final Window window) {
+    public PixelCanvas(final Window w) {
+        window = w;
         insets =  window.getFrame().getInsets();
         image = new BufferedImage(Program.getWidth(), Program.getHeight(), BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
-        Renderer.getInstance(pixels);
+        renderer = new Renderer(pixels);
+
+        window.getFrame().add(this);
+        this.createBufferStrategy(2);
     }
 
-    public void clear() {
-        Arrays.fill(pixels, Program.getClearColor());
-    }
-
-    public void repaint() {
+    public void paint() {
+        window.refresh();
         Graphics g = null;
+
         try {
             g = this.getBufferStrategy().getDrawGraphics();
 
@@ -47,9 +52,24 @@ public class PixelCanvas extends Canvas {
 
         this.getBufferStrategy().show();
     }
+    public void addKeyboardListener() {
+        Keyboard keyListener = Keyboard.getInstance();
+        this.addKeyListener(keyListener);
+    }
+
+    public void addMouseListener() {
+        Mouse mouseListener = Mouse.getInstance();
+        this.addMouseListener(mouseListener);
+        this.addMouseMotionListener(mouseListener);
+        this.addMouseWheelListener(mouseListener);
+    }
 
     public int[] getPixels() {
         return pixels;
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
     }
 
     public BufferedImage getImage() {

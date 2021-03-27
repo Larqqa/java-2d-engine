@@ -1,4 +1,4 @@
-package engine.renderer.shapes;
+package engine.pixelCanvas.renderable.image;
 
 import engine.utilities.Color;
 import engine.utilities.MinMax;
@@ -6,9 +6,7 @@ import engine.utilities.Point;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;

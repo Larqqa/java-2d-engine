@@ -1,23 +1,15 @@
-package engine;
+package engine.program;
 
-import engine.controls.Keyboard;
 import engine.controls.Mouse;
-import engine.renderer.Renderer;
-import engine.window.PixelCanvas;
-import engine.window.Window;
 
 import java.util.Objects;
 
 public final class Engine {
     private boolean started = false;
     private static Engine instance;
-    private final PixelCanvas canvas;
-    private final Window window;
     private final Program program;
 
     private Engine(final Program program) {
-        window = new Window();
-        canvas = window.getCanvas();
         this.program = program;
     }
 
@@ -67,11 +59,9 @@ public final class Engine {
             while(unprocessedTime >= Program.getFrameCap() && unprocessedTime != 0) {
                 unprocessedTime -= Program.getFrameCap();
                 shouldRender = true;
-
+                program.update();
                 Mouse.getInstance().decrementMouseWheel();
-                program.update(Mouse.getInstance(), Keyboard.getInstance());
             }
-            program.update(Mouse.getInstance(), Keyboard.getInstance());
 
             if (frameTime >= 1.0) {
                 frameTime -= frameTime;
@@ -83,10 +73,7 @@ public final class Engine {
             }
 
             if (shouldRender) {
-                window.refresh();
-                program.render(Renderer.getInstance());
-                canvas.repaint();
-
+                program.render();
                 frames++;
             }
         }

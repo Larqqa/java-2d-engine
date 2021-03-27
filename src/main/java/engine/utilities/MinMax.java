@@ -1,6 +1,7 @@
 package engine.utilities;
 
-import engine.Program;
+import engine.program.Program;
+
 import java.util.ArrayList;
 
 public class MinMax {
