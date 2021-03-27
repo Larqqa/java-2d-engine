@@ -5,17 +5,9 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Objects;
 
-public final class Keyboard implements KeyListener {
+public class Keyboard implements KeyListener {
 
     private final HashMap<Integer, String> pressedKeys = new HashMap<>();
-    private static Keyboard instance;
-
-    public static Keyboard getInstance() {
-        if(Objects.isNull(instance)) {
-            instance = new Keyboard();
-        }
-        return instance;
-    }
 
     @Override
     public void keyPressed(KeyEvent e) {

@@ -5,10 +5,10 @@ import engine.program.Program;
 import java.util.ArrayList;
 
 public class MinMax {
-    private int minX = Program.getWidth();
-    private int minY = Program.getHeight();
-    private int maxX = 0;
-    private int maxY = 0;
+    private int minX = Integer.MAX_VALUE;
+    private int minY = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+    private int maxY = Integer.MIN_VALUE;
 
     public MinMax(final ArrayList<Point> pointArray, int offSet) {
         for (Point point : pointArray) {

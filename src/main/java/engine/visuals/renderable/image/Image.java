@@ -1,4 +1,4 @@
-package engine.pixelCanvas.renderable.image;
+package engine.visuals.renderable.image;
 
 import engine.utilities.Color;
 import engine.utilities.MinMax;

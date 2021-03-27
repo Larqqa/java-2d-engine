@@ -1,13 +1,12 @@
 package engine.program;
 
-import engine.controls.Mouse;
-
 import java.util.Objects;
 
 public final class Engine {
     private boolean started = false;
     private static Engine instance;
     private final Program program;
+    private double frameCap = 1.0 / 60.0;
 
     private Engine(final Program program) {
         this.program = program;
@@ -56,11 +55,10 @@ public final class Engine {
             frameTime += elapsedTime;
             shouldRender = false;
 
-            while(unprocessedTime >= Program.getFrameCap() && unprocessedTime != 0) {
-                unprocessedTime -= Program.getFrameCap();
+            while(unprocessedTime >= frameCap && unprocessedTime != 0) {
+                unprocessedTime -= frameCap;
                 shouldRender = true;
                 program.update();
-                Mouse.getInstance().decrementMouseWheel();
             }
 
             if (frameTime >= 1.0) {
@@ -79,4 +77,11 @@ public final class Engine {
         }
     }
 
+    public double getFrameCap() {
+        return frameCap;
+    }
+
+    public void setFrameCap(double frameCap) {
+        this.frameCap = frameCap;
+    }
 }

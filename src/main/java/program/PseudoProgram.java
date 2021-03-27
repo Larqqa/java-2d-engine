@@ -1,67 +1,73 @@
 package program;
 
-import engine.controls.Keyboard;
-import engine.controls.Mouse;
-import engine.pixelCanvas.PixelCanvas;
-import engine.pixelCanvas.renderable.image.Sprite;
+import engine.visuals.PixelCanvas;
+import engine.visuals.renderable.image.Sprite;
 import engine.program.Program;
+import engine.utilities.Color;
 import engine.utilities.Colors;
 import engine.utilities.Point;
-import engine.window.Window;
+import engine.visuals.Window;
 
 public class PseudoProgram extends Program {
 
     private final Window w;
     private final PixelCanvas p;
-    private final Mouse m;
-    private final Keyboard k;
 
-    private final Point mouse = new Point(0,0);
-    private final Point keyboard = new Point(200,200);
+    private final Point mouse;
+    private final Point keyboard;
 
-    private final Sprite s = new Sprite("sprite.png", 32,32, 5);
+    private final Sprite s;
 
     public PseudoProgram() {
-        Program.setWidth(16);
-        Program.setHeight(8);
-        Program.setScale(120.0);
+        w = new Window.Builder()
+                .setWidth(300)
+                .setHeight(300)
+                .setScale(2)
+                .setTitle("yeeet")
+                .build();
 
-        w = new Window();
         p = new PixelCanvas(w);
-        p.addMouseListener();
-        p.addKeyboardListener();
-        k = Keyboard.getInstance();
-        m = Mouse.getInstance();
+        p.getRenderer().setClearColor(new Color(0.0,0.4,0.5));
 
+        mouse = new Point(150, 150);
+        keyboard = new Point(150, 150);
+
+        s = new Sprite("sprite.png", 32,32, 5);
+
+        setFrameCap(60);
         start();
     }
 
     @Override
     public void update() {
-        mouse.setX(m.getMouseX());
-        mouse.setY(m.getMouseY());
+        mouse.setX(p.getMouse().getMouseX());
+        mouse.setY(p.getMouse().getMouseY());
 
-        if (k.isKeyDown(87)) {
+        if (p.getKeyboard().isKeyDown(87)) {
             keyboard.setY(keyboard.getY() + 1);
         }
-        if (k.isKeyDown(83)) {
+        if (p.getKeyboard().isKeyDown(83)) {
             keyboard.setY(keyboard.getY() - 1);
         }
 
-        if (k.isKeyDown(65)) {
+        if (p.getKeyboard().isKeyDown(65)) {
             keyboard.setX(keyboard.getX() - 1);
         }
-        if (k.isKeyDown(68)) {
+        if (p.getKeyboard().isKeyDown(68)) {
             keyboard.setX(keyboard.getX() + 1);
         }
     }
 
     @Override
     public void render(){
+//        w.refresh();
+
         p.getRenderer().test();
-//        p.getRenderer().circle(mouse, 30, Colors.blue());
-//        p.getRenderer().circle(keyboard, 30, Colors.green());
-//        p.getRenderer().drawSprite(keyboard, s);
+        p.getRenderer().clear();
+        p.getRenderer().circle(mouse, 30, Colors.blue());
+        p.getRenderer().circle(keyboard, 30, Colors.green());
+        p.getRenderer().drawSprite(keyboard, s);
+
         p.paint();
     }
 }

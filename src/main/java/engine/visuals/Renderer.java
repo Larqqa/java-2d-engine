@@ -1,15 +1,14 @@
-package engine.pixelCanvas;
+package engine.visuals;
 
-import engine.pixelCanvas.renderable.image.Image;
-import engine.pixelCanvas.renderable.image.Sprite;
-import engine.pixelCanvas.renderable.shapes.BezierCurve;
-import engine.pixelCanvas.renderable.shapes.Circle;
-import engine.pixelCanvas.renderable.shapes.Ellipse;
-import engine.pixelCanvas.renderable.shapes.Line;
-import engine.pixelCanvas.renderable.shapes.Polygon;
-import engine.pixelCanvas.renderable.shapes.Triangle;
+import engine.visuals.renderable.image.Image;
+import engine.visuals.renderable.image.Sprite;
+import engine.visuals.renderable.shapes.BezierCurve;
+import engine.visuals.renderable.shapes.Circle;
+import engine.visuals.renderable.shapes.Ellipse;
+import engine.visuals.renderable.shapes.Line;
+import engine.visuals.renderable.shapes.Polygon;
+import engine.visuals.renderable.shapes.Triangle;
 import engine.utilities.Color;
-import engine.program.Program;
 import engine.utilities.MinMax;
 import engine.utilities.Point;
 
@@ -19,14 +18,18 @@ import java.util.Arrays;
 public class Renderer {
 
     private final int[] pixels;
-    private static Renderer instance;
+    private final int width;
+    private final int height;
+    private int clearColor = 0xFF000000;
 
-    public Renderer(final int[] pixels) {
+    public Renderer(final int[] pixels, final int width, final int height) {
         this.pixels = pixels;
+        this.width = width;
+        this.height = height;
     }
 
     public void clear() {
-        Arrays.fill(pixels, Program.getClearColor());
+        Arrays.fill(pixels, clearColor);
     }
     public void clear(Color color) {
         Arrays.fill(pixels, color.colorToInt());
@@ -199,15 +202,15 @@ public class Renderer {
     }
 
     public void test(){
-        for(int y = 0; y < Program.getHeight(); y++) {
-            for(int x = 0; x < Program.getWidth(); x++) {
+        for(int y = 0; y < this.height; y++) {
+            for(int x = 0; x < this.width; x++) {
                 Color color = new Color(
-                    (double) x / Program.getWidth(),
-                    (double) (Program.getHeight() - y) / Program.getHeight(),
+                    (double) x / this.width,
+                    (double) (this.height - y) / this.height,
                     0.25
                 );
 
-                pixels[y * Program.getWidth() + x] = color.colorToInt();
+                pixels[y * this.width + x] = color.colorToInt();
             }
         }
     }
@@ -218,9 +221,9 @@ public class Renderer {
             int offsetY = (int) Math.floor(point.getY()) + (i / width);
 
             if (offsetX < 0 || offsetY < 0) continue;
-            if (offsetX >= Program.getWidth() || offsetY >= Program.getHeight()) continue;
+            if (offsetX >= this.width || offsetY >= this.height) continue;
 
-            int pixelLocation = offsetY * Program.getWidth() + offsetX;
+            int pixelLocation = offsetY * this.width + offsetX;
 
             if (shapeArray[i]) {
                 pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
@@ -234,9 +237,9 @@ public class Renderer {
             int offsetY = (int) Math.round(point.getY()) + (i / width);
 
             if (offsetX < 0 || offsetY < 0) continue;
-            if (offsetX >= Program.getWidth() || offsetY >= Program.getHeight()) continue;
+            if (offsetX >= this.width || offsetY >= this.height) continue;
 
-            int pixelLocation = offsetY * Program.getWidth() + offsetX;
+            int pixelLocation = offsetY * this.width + offsetX;
 
             if (shapeArray[i]) {
                 pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
@@ -249,10 +252,18 @@ public class Renderer {
 
     public void drawPixel(Point point, Color color) {
         if (point.getX() < 0 || point.getY() < 0) return;
-        if (point.getX() >= Program.getWidth() || point.getY() >= Program.getHeight()) return;
+        if (point.getX() >= this.width || point.getY() >= this.height) return;
 
-        int pixelLocation = (int) (Math.round(point.getY()) * Program.getWidth() + Math.round(point.getX()));
+        int pixelLocation = (int) (Math.round(point.getY()) * this.width + Math.round(point.getX()));
         pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
 //        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
+    }
+
+    public int getClearColor() {
+        return clearColor;
+    }
+
+    public void setClearColor(Color color) {
+        this.clearColor = color.colorToInt();
     }
 }

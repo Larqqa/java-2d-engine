@@ -1,9 +1,7 @@
-package engine.pixelCanvas;
+package engine.visuals;
 
 import engine.controls.Keyboard;
 import engine.controls.Mouse;
-import engine.program.Program;
-import engine.window.Window;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
@@ -19,20 +17,29 @@ public class PixelCanvas extends Canvas {
     private final Insets insets;
     private final Renderer renderer;
     private final Window window;
+    Mouse mouseListener;
+    Keyboard keyListener = new Keyboard();
 
     public PixelCanvas(final Window w) {
         window = w;
         insets =  window.getFrame().getInsets();
-        image = new BufferedImage(Program.getWidth(), Program.getHeight(), BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(window.getWidth(), window.getHeight(), BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
-        renderer = new Renderer(pixels);
+        renderer = new Renderer(pixels, window.getWidth(), window.getHeight());
 
         window.getFrame().add(this);
         this.createBufferStrategy(2);
+
+        mouseListener = new Mouse(window.getScale());
+        this.addMouseListener(mouseListener);
+        this.addMouseMotionListener(mouseListener);
+        this.addMouseWheelListener(mouseListener);
+
+        this.addKeyListener(keyListener);
     }
 
     public void paint() {
-        window.refresh();
+        mouseListener.decrementMouseWheel();
         Graphics g = null;
 
         try {
@@ -40,10 +47,11 @@ public class PixelCanvas extends Canvas {
 
             g.drawImage(
                     image,
-                    insets.left,
-                    insets.right,
-                    (int)(Program.getWidth() * Program.getScale()),
-                    (int)(Program.getHeight() * Program.getScale()),
+//                    insets.left,
+//                    insets.right,
+                    0,0,
+                    (int)(window.getWidth() * window.getScale()),
+                    (int)(window.getHeight() * window.getScale()),
                     null
             );
         } finally {
@@ -51,17 +59,6 @@ public class PixelCanvas extends Canvas {
         }
 
         this.getBufferStrategy().show();
-    }
-    public void addKeyboardListener() {
-        Keyboard keyListener = Keyboard.getInstance();
-        this.addKeyListener(keyListener);
-    }
-
-    public void addMouseListener() {
-        Mouse mouseListener = Mouse.getInstance();
-        this.addMouseListener(mouseListener);
-        this.addMouseMotionListener(mouseListener);
-        this.addMouseWheelListener(mouseListener);
     }
 
     public int[] getPixels() {
@@ -74,5 +71,13 @@ public class PixelCanvas extends Canvas {
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public Mouse getMouse() {
+        return mouseListener;
+    }
+
+    public Keyboard getKeyboard() {
+        return keyListener;
     }
 }

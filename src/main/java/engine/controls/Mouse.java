@@ -1,30 +1,23 @@
 package engine.controls;
 
-import engine.program.Program;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.HashMap;
-import java.util.Objects;
 
-public final class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     private final HashMap<Integer, String> pressedButtons = new HashMap<>();
     private int mouseX;
     private int mouseY;
     private int wheelDirection;
     private int wheelAmount;
-    private static Mouse instance;
+    private final double scale;
 
-    public static Mouse getInstance() {
-        if(Objects.isNull(instance)) {
-            instance = new Mouse();
-        }
-
-        return instance;
+    public Mouse(final double scale) {
+        this.scale = scale;
     }
 
     @Override
@@ -39,8 +32,8 @@ public final class Mouse implements MouseListener, MouseMotionListener, MouseWhe
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-        mouseX = (int) (mouseEvent.getX() / Program.getScale());
-        mouseY = (int) (mouseEvent.getY() / Program.getScale());
+        mouseX = (int) (mouseEvent.getX() / scale);
+        mouseY = (int) (mouseEvent.getY() / scale);
     }
 
     @Override
