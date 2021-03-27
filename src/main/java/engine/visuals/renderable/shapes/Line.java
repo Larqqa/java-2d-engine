@@ -22,8 +22,8 @@ public class Line extends Shape {
         int secondX = (int) points.get(1).getX();
         int secondY = (int) points.get(1).getY();
 
-        int width = minMax.getMaxX() + lineWidth;
-        int height = minMax.getMaxY() + lineWidth;
+        int width = (int) minMax.getMaxX() + lineWidth;
+        int height = (int) minMax.getMaxY() + lineWidth;
 
         boolean[] pixels = new boolean[width * height];
 

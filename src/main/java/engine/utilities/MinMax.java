@@ -1,19 +1,17 @@
 package engine.utilities;
 
-import engine.program.Program;
-
 import java.util.ArrayList;
 
 public class MinMax {
-    private int minX = Integer.MAX_VALUE;
-    private int minY = Integer.MAX_VALUE;
-    private int maxX = Integer.MIN_VALUE;
-    private int maxY = Integer.MIN_VALUE;
+    private double minX = Double.MAX_VALUE;
+    private double minY = Double.MAX_VALUE;
+    private double maxX = Double.MIN_VALUE;
+    private double maxY = Double.MIN_VALUE;
 
-    public MinMax(final ArrayList<Point> pointArray, int offSet) {
+    public MinMax(final ArrayList<Point> pointArray, double offSet) {
         for (Point point : pointArray) {
-            int x = (int) point.getX();
-            int y = (int) point.getY();
+            double x = point.getX();
+            double y = point.getY();
 
             if (x < minX) minX = x;
             if (y < minY) minY = y;
@@ -29,15 +27,15 @@ public class MinMax {
         return "{ minX: " + minX +", minY: "+ minY +", maxX: "+ maxX +", maxY: "+ maxY +"}";
     }
 
-    public int width() {
+    public double width() {
         return maxX - minX;
     }
 
-    public int height() {
+    public double height() {
         return maxY - minY;
     }
 
-    public int getMinX() {
+    public double getMinX() {
         return minX;
     }
 
@@ -45,7 +43,7 @@ public class MinMax {
         this.minX = minX;
     }
 
-    public int getMinY() {
+    public double getMinY() {
         return minY;
     }
 
@@ -53,7 +51,7 @@ public class MinMax {
         this.minY = minY;
     }
 
-    public int getMaxX() {
+    public double getMaxX() {
         return maxX;
     }
 
@@ -61,7 +59,7 @@ public class MinMax {
         this.maxX = maxX;
     }
 
-    public int getMaxY() {
+    public double getMaxY() {
         return maxY;
     }
 

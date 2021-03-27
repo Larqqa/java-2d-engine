@@ -17,26 +17,26 @@ public class Triangle extends Shape {
         secondPoint = points.get(1);
         thirdPoint = points.get(2);
 
-        int width = minMax.width();
-        int height = minMax.height();
+        int width = (int) minMax.width();
+        int height = (int) minMax.height();
         boolean[] pixels = new boolean[width * height];
 
         MinMax pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(firstPoint, secondPoint)), lineWidth);
         combinePixels(
-                pointMinMax.getMinX(), pointMinMax.getMinY(),
-                Line.plot(firstPoint, secondPoint, lineWidth), pointMinMax.width(),
+                (int) pointMinMax.getMinX(), (int) pointMinMax.getMinY(),
+                Line.plot(firstPoint, secondPoint, lineWidth), (int) pointMinMax.width(),
                 pixels, width);
 
         pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(secondPoint, thirdPoint)), lineWidth);
         combinePixels(
-                pointMinMax.getMinX(), pointMinMax.getMinY(),
-                Line.plot(secondPoint, thirdPoint, lineWidth), pointMinMax.width(),
+                (int) pointMinMax.getMinX(), (int) pointMinMax.getMinY(),
+                Line.plot(secondPoint, thirdPoint, lineWidth), (int) pointMinMax.width(),
                 pixels, width);
 
         pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(thirdPoint, firstPoint)), lineWidth);
         combinePixels(
-                pointMinMax.getMinX(), pointMinMax.getMinY(),
-                Line.plot(thirdPoint, firstPoint, lineWidth), pointMinMax.width(),
+                (int) pointMinMax.getMinX(), (int) pointMinMax.getMinY(),
+                Line.plot(thirdPoint, firstPoint, lineWidth), (int) pointMinMax.width(),
                 pixels, width);
 
         return pixels;
@@ -54,8 +54,8 @@ public class Triangle extends Shape {
         secondPoint = points.get(1);
         thirdPoint = points.get(2);
 
-        int width = minMax.width();
-        int height = minMax.height();
+        int width = (int) minMax.width();
+        int height = (int) minMax.height();
         boolean[] pixels = new boolean[width * height];
 
         combinePixels(
@@ -72,8 +72,8 @@ public class Triangle extends Shape {
                 thirdPoint.getY() - firstPoint.getY());
 
 
-        for (int y = minMax.getMinY(); y < minMax.getMaxY(); y++)  {
-            for (int x = minMax.getMinX(); x < minMax.getMaxX(); x++) {
+        for (int y = (int) minMax.getMinY(); y < minMax.getMaxY(); y++)  {
+            for (int x = (int) minMax.getMinX(); x < minMax.getMaxX(); x++) {
                 Point thirdVertice = new Point(
                         x - firstPoint.getX(),
                         y - firstPoint.getY());
@@ -83,7 +83,7 @@ public class Triangle extends Shape {
                 float t = (float)(firstVertice.getX() * thirdVertice.getY()  - firstVertice.getY() * thirdVertice.getX())  / n;
 
                 if ((s >= 0) && (t >= 0) && (s + t <= 1)) {
-                    pixels[(y - minMax.getMinY()) * width + (x - minMax.getMinX())] = true;
+                    pixels[(y - (int) minMax.getMinY()) * width + (x - (int) minMax.getMinX())] = true;
                 }
             }
         }

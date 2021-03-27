@@ -44,8 +44,8 @@ public class BezierCurve extends Shape {
         points = normalizePoints(points, minMax);
         minMax = new MinMax(points, lineWidth);
 
-        int width = minMax.width();
-        int height = minMax.height();
+        int width = (int) minMax.width();
+        int height = (int) minMax.height();
         boolean[] pixels = new boolean[width * height];
 
         double precision = 0.01;
@@ -56,8 +56,8 @@ public class BezierCurve extends Shape {
             MinMax pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(previous, current)), lineWidth);
 
             combinePixels(
-                    pointMinMax.getMinX(), pointMinMax.getMinY(),
-                    Line.plot(previous, current, lineWidth), pointMinMax.width(),
+                    (int) pointMinMax.getMinX(), (int) pointMinMax.getMinY(),
+                    Line.plot(previous, current, lineWidth), (int) pointMinMax.width(),
                     pixels, width);
 
             previous = current;

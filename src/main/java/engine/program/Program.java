@@ -9,6 +9,7 @@ public abstract class Program {
 
     public void stop() {
         engine.stop();
+        System.out.println("Engine stopped.");
     }
 
     abstract public void update();

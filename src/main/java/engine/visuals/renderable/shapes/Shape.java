@@ -29,8 +29,8 @@ public abstract class Shape {
     public static ArrayList<Point> normalizePoints(ArrayList<Point> pointArray, MinMax minMax) {
         ArrayList<Point> points = new ArrayList<>();
         for (Point point : pointArray) {
-            int x = (int) point.getX() - minMax.getMinX();
-            int y = (int) point.getY() - minMax.getMinY();
+            int x = (int) (point.getX() - minMax.getMinX());
+            int y = (int) (point.getY() - minMax.getMinY());
             points.add(new Point(x, y));
         }
         return points;

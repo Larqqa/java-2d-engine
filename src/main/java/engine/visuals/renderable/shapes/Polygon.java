@@ -17,8 +17,8 @@ public class Polygon extends Shape {
             points.add(points.get(0));
         }
 
-        int width = minMax.width();
-        int height = minMax.height();
+        int width = (int) minMax.width();
+        int height = (int) minMax.height();
 
         boolean[] pixels = new boolean[width * height];
 
@@ -35,8 +35,8 @@ public class Polygon extends Shape {
             combinePixels(minX, minY, Line.plot(previousPoint, thisPoint, lineWidth), lineW, pixels, width);
 
             combinePixels(
-                    pointMinMax.getMinX(), pointMinMax.getMinY(),
-                    Line.plot(previousPoint, thisPoint, lineWidth), pointMinMax.width(),
+                    (int) pointMinMax.getMinX(), (int) pointMinMax.getMinY(),
+                    Line.plot(previousPoint, thisPoint, lineWidth), (int) pointMinMax.width(),
                     pixels, width);
 
             previousPoint = thisPoint;
@@ -55,7 +55,7 @@ public class Polygon extends Shape {
         MinMax minMax = new MinMax(pointArray, lineWidth);
         ArrayList<Point> points = normalizePoints(pointArray, minMax);
         minMax = new MinMax(points, lineWidth);
-        int width = minMax.width();
+        int width = (int) minMax.width();
 
         // Close the loop
         if (points.get(0) != points.get(points.size() - 1)) {
@@ -82,7 +82,7 @@ public class Polygon extends Shape {
         edges.sort(Comparator.comparingInt(edge -> (int) edge[0].getY()));
 
         ArrayList<ArrayList<Point>> scanlines = new ArrayList<>();
-        for (int y = minMax.getMinY(); y < minMax.getMaxY(); y++) {
+        for (int y = (int) minMax.getMinY(); y < minMax.getMaxY(); y++) {
             Point lastPoint = new Point(0,0);
             ArrayList<Point> intersectionPoints = new ArrayList<>();
             int intersections = 1;
@@ -129,8 +129,8 @@ public class Polygon extends Shape {
 
                 boolean[] line = Line.plot(firstPoint, secondPoint, lineWidth);
                 combinePixels(
-                        pointMinMax.getMinX(), pointMinMax.getMinY(),
-                        line, pointMinMax.width(),
+                        (int) pointMinMax.getMinX(), (int) pointMinMax.getMinY(),
+                        line, (int) pointMinMax.width(),
                         pixels, width);
             }
         }

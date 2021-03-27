@@ -68,8 +68,8 @@ public class Image {
 
         MinMax minMax = new MinMax(corners, 0);
 
-        int totalWidth = Math.round(minMax.getMaxX() + Math.abs(minMax.getMinX()));
-        int totalHeight = Math.round(minMax.getMaxY() + Math.abs(minMax.getMinY()));
+        int totalWidth = (int) Math.round(minMax.getMaxX() + Math.abs(minMax.getMinX()));
+        int totalHeight = (int) Math.round(minMax.getMaxY() + Math.abs(minMax.getMinY()));
 
         int[] newPixels = new int[totalWidth * totalHeight];
 
@@ -97,7 +97,69 @@ public class Image {
         return this;
     }
 
-    // https://tech-algorithm.com/articles/nearest-neighbor-image-scaling/
+    private Image xShear(double xShear) {
+        if (xShear == 0) return this;
+
+        int newWidth = (int) (width + Math.abs(xShear) * height);
+        int[] newPixels = new int[newWidth * height];
+
+        double xOffset = xShear < 0 ? Math.abs(xShear) * height : 0;
+
+        for(int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int newX = (int) (x + xShear * y);
+                int pixel = (int) (y * newWidth + (newX + xOffset));
+                int originalPixel = y * width + x;
+
+                if (pixel > newPixels.length - 1) continue;
+                if (originalPixel > pixels.length - 1) continue;
+
+                newPixels[pixel] = pixels[originalPixel];
+            }
+        }
+
+        pixels = newPixels;
+        width = newWidth;
+        height = height;
+        return this;
+    }
+
+    private Image yShear(double yShear) {
+        if (yShear == 0) return this;
+
+        int newHeight = (int) (height + Math.abs(yShear) * width);
+        int[] newPixels = new int[width * newHeight];
+
+        double yOffset = yShear < 0 ? Math.abs(yShear) * width : 0;
+
+        for(int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int newY = (int) (y + yShear * x);
+                int pixel = (int) ((newY + yOffset) * width + x);
+                int originalPixel = y * width + x;
+
+                if (pixel < 0 || pixel > newPixels.length - 1) continue;
+                if (originalPixel > pixels.length - 1) continue;
+
+                newPixels[pixel] = pixels[originalPixel];
+            }
+        }
+
+        pixels = newPixels;
+        width = width;
+        height = newHeight;
+        return this;
+    }
+
+    public Image shear(double xShear, double yShear) {
+//        System.out.println(xShear + " " + yShear);
+
+        this.xShear(xShear);
+        this.yShear(yShear);
+        return this;
+    }
+
+        // https://tech-algorithm.com/articles/nearest-neighbor-image-scaling/
     public Image scale(double xScale, double yScale) {
         int scaledWidth = (int) Math.round(originalWidth * xScale);
         int scaledHeight = (int) Math.round(originalHeight * yScale);

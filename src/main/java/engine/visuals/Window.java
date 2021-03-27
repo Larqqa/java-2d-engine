@@ -1,5 +1,7 @@
 package engine.visuals;
 
+import engine.program.Engine;
+
 import javax.swing.JFrame;
 import java.awt.Insets;
 import java.awt.event.WindowEvent;
@@ -87,12 +89,11 @@ public class Window implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        frame.dispose();
-
         if ( windowAmount <= 1) {
             System.exit(0);
         }
 
+        frame.dispose();
         windowAmount--;
     }
 

@@ -41,7 +41,7 @@ public class Renderer {
 
         boolean[] pixels = BezierCurve.plot(points, lineWidth);
         Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
-        draw(offsetPoint, pixels, minMax.width(), color);
+        draw(offsetPoint, pixels, (int) minMax.width(), color);
     }
 
     public void bezierLine(ArrayList<Point> points, Color color) {
@@ -55,7 +55,7 @@ public class Renderer {
 
         boolean[] pixels = Line.plot(firstPoint, secondPoint, lineWidth);
         Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
-        draw(offsetPoint, pixels, minMax.getMaxX() - minMax.getMinX(), color);
+        draw(offsetPoint, pixels, (int) minMax.getMaxX() - (int) minMax.getMinX(), color);
     }
 
     public void line(Point firstPoint, Point secondPoint, Color color) {
@@ -123,7 +123,7 @@ public class Renderer {
 
         int halfWidth = lineWidth / 2;
         Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
-        draw(offsetPoint, pixels, minMax.width(), color);
+        draw(offsetPoint, pixels, (int) minMax.width(), color);
     }
 
     public void triangle(Point firstPoint, Point secondPoint, Point thirdPoint, Color color) {
@@ -132,7 +132,7 @@ public class Renderer {
         boolean[] pixels = Triangle.fill(firstPoint, secondPoint, thirdPoint);
 
         Point offsetPoint = new Point(minMax.getMinX(), minMax.getMinY());
-        draw(offsetPoint, pixels, minMax.width(), color);
+        draw(offsetPoint, pixels, (int) minMax.width(), color);
     }
 
     public void polygon(ArrayList<Point> points, int lineWidth, Color color) {
@@ -141,7 +141,7 @@ public class Renderer {
 
         int halfWidth = lineWidth / 2;
         Point offsetPoint = new Point(minMax.getMinX() - halfWidth, minMax.getMinY() - halfWidth);
-        draw(offsetPoint, pixels, minMax.width(), color);
+        draw(offsetPoint, pixels, (int) minMax.width(), color);
     }
 
     public void polygon(ArrayList<Point> points, Color color) {
@@ -149,7 +149,7 @@ public class Renderer {
         boolean[] pixels = Polygon.fill(points);
 
         Point offsetPoint = new Point(minMax.getMinX(), minMax.getMinY());
-        draw(offsetPoint, pixels, minMax.width(), color);
+        draw(offsetPoint, pixels, (int) minMax.width(), color);
     }
 
     private Point calculateRectanglePoint(Point point, Point origin, double angle) {
@@ -256,7 +256,7 @@ public class Renderer {
 
         int pixelLocation = (int) (Math.round(point.getY()) * this.width + Math.round(point.getX()));
         pixels[pixelLocation] = color.alphaBlend(pixels[pixelLocation]);
-//        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
+        pixels[pixelLocation] = new Color(0.0,0.0,0.0,0.2).alphaBlend(pixels[pixelLocation]);
     }
 
     public int getClearColor() {
