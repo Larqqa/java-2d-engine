@@ -38,7 +38,7 @@ public class PseudoProgram extends Program {
         keyboard = new Point(150, 150);
 
         s = new Sprite("sprite.png", 32,32, 5);
-        img = new Image("square.png");
+        img = new Image("square.png").scale(2);
 
         setFrameCap(60);
         start();
@@ -51,20 +51,20 @@ public class PseudoProgram extends Program {
 
         if (p.getKeyboard().isKeyDown(87)) {
             keyboard.setY(keyboard.getY() + 1);
-            shearingx += 0.1;
+            shearingx += .1;
         }
         if (p.getKeyboard().isKeyDown(83)) {
             keyboard.setY(keyboard.getY() - 1);
-            shearingx -= 0.1;
+            shearingx -= .1;
         }
 
         if (p.getKeyboard().isKeyDown(65)) {
             keyboard.setX(keyboard.getX() - 1);
-            shearingy += 0.1;
+            shearingy += .1;
         }
         if (p.getKeyboard().isKeyDown(68)) {
             keyboard.setX(keyboard.getX() + 1);
-            shearingy -= 0.1;
+            shearingy -= .1;
         }
     }
 
@@ -76,7 +76,7 @@ public class PseudoProgram extends Program {
 //        p.getRenderer().circle(keyboard, 30, Colors.green());
 //        p.getRenderer().drawSprite(keyboard, s);
 
-        p.getRenderer().drawImage(new Point(150,150), new Image("square.png").rotate(40));
+        p.getRenderer().drawImage(new Point(150,150), img.shear(shearingx, shearingy));
 
         p.paint();
 //        stop();
