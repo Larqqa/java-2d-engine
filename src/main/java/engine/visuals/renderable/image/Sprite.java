@@ -4,6 +4,8 @@ import engine.utilities.Color;
 
 import java.util.ArrayList;
 
+import static java.util.stream.Collectors.toCollection;
+
 public class Sprite {
     private final ArrayList<Image> sprites;
 
@@ -39,28 +41,83 @@ public class Sprite {
         }
     }
 
-    public void scale(double scale) {
-        for (Image sprite : sprites) {
-            sprite.scale(scale);
-        }
+    private Sprite(ArrayList<Image> sprites,
+                   int width, int height,
+                   int spriteWidth, int spriteHeight,
+                   int loopLength, int frameDelay,
+                   int offsetCounter, int loopCounter) {
+        this.sprites = sprites;
+        this.width = width;
+        this.height = height;
+        this.spriteWidth = spriteWidth;
+        this.spriteHeight = spriteHeight;
+        this.loopLength = loopLength;
+        this.frameDelay = frameDelay;
+        this.offsetCounter = offsetCounter;
+        this.loopCounter = loopCounter;
     }
 
-    public void scale(double xScale, double yScale) {
-        for (Image sprite : sprites) {
-            sprite.scale(xScale, yScale);
-        }
+    public Sprite scale(double xScale, double yScale) {
+        return new Sprite(sprites.stream()
+            .map(sprite -> sprite.scale(xScale, yScale))
+            .collect(toCollection(ArrayList::new)),
+                width, height,
+                spriteWidth, spriteHeight,
+                loopLength, frameDelay,
+                offsetCounter, loopCounter
+        );
     }
 
-    public void tint(Color color) {
-        for (Image sprite : sprites) {
-            sprite.tint(color);
-        }
+    public Sprite scale(double scale) {
+        return scale(scale, scale);
     }
 
-    public void rotate(double angle) {
-        for (Image sprite : sprites) {
-            sprite.rotate(angle);
-        }
+    public Sprite tint(Color color) {
+        return new Sprite(sprites.stream()
+            .map(sprite -> sprite.tint(color))
+            .collect(toCollection(ArrayList::new)),
+                width, height,
+                spriteWidth, spriteHeight,
+                loopLength, frameDelay,
+                offsetCounter, loopCounter
+        );
+    }
+
+    public Sprite rotate(double angle) {
+        return new Sprite(sprites.stream()
+            .map(sprite -> sprite.rotate(angle))
+            .collect(toCollection(ArrayList::new)),
+                width, height,
+                spriteWidth, spriteHeight,
+                loopLength, frameDelay,
+                offsetCounter, loopCounter
+        );
+    }
+
+    public Sprite shear(double xShear, double yShear) {
+        return new Sprite(sprites.stream()
+                .map(sprite -> sprite.shear(xShear, yShear))
+                .collect(toCollection(ArrayList::new)),
+                width, height,
+                spriteWidth, spriteHeight,
+                loopLength, frameDelay,
+                offsetCounter, loopCounter
+        );
+    }
+
+    public Sprite shear(double shear) {
+        return shear(shear, shear);
+    }
+
+    public Sprite toOriginal() {
+        return new Sprite(sprites.stream()
+            .map(Image::toOriginal)
+            .collect(toCollection(ArrayList::new)),
+                width, height,
+                spriteWidth, spriteHeight,
+                loopLength, frameDelay,
+                offsetCounter, loopCounter
+        );
     }
 
     public void incrementLoopCounter() {

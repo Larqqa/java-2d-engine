@@ -15,9 +15,9 @@ public class Image {
     private int[] pixels;
     private int width;
     private int height;
-    private int[] originalPixels;
-    private int originalWidth;
-    private int originalHeight;
+    private final int[] originalPixels;
+    private final int originalWidth;
+    private final int originalHeight;
 
     public Image(String path) {
         try {
@@ -30,8 +30,7 @@ public class Image {
             pixels = image.getRGB(0, 0, width, height, null, 0, width);
             originalPixels = pixels;
         } catch (IOException e) {
-            System.out.println(e);
-            System.exit(1);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -45,10 +44,10 @@ public class Image {
     }
 
     private Point getCorner(double deltaX, double deltaY, double originX, double originY, double sine, double cosine) {
-        double x = Math.ceil(deltaX * cosine - deltaY * sine);
-        double y = Math.ceil(deltaX * sine   + deltaY * cosine);
-
-        return new Point(x, y);
+        return new Point(
+            Math.ceil(deltaX * cosine - deltaY * sine),
+            Math.ceil(deltaX * sine   + deltaY * cosine)
+        );
     }
 
     // https://stackoverflow.com/questions/29739809/java-rotation-of-pixel-array
@@ -101,8 +100,7 @@ public class Image {
 
         for(int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int newX = (int) (x + xShear * y);
-                int pixel = (int) (y * newWidth + (newX + xOffset));
+                int pixel = (int) (y * newWidth + ((x + xShear * y) + xOffset));
                 int originalPixel = y * width + x;
 
                 if (pixel > newPixels.length - 1) continue;
@@ -125,8 +123,7 @@ public class Image {
 
         for(int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int newY = (int) (y + yShear * x);
-                int pixel = (int) ((newY + yOffset) * width + x);
+                int pixel = (int) (((y + yShear * x) + yOffset) * width + x);
                 int originalPixel = y * width + x;
 
                 if (pixel < 0 || pixel > newPixels.length - 1) continue;
@@ -165,10 +162,10 @@ public class Image {
     }
 
     public Image scale(double xScale, double yScale) {
-        if (xScale < 0) xScale = 0;
-        if (yScale < 0) yScale = 0;
-
-        return doScale(xScale, yScale);
+        return doScale(
+            xScale < 0 ? 0 : xScale,
+            yScale < 0 ? 0 : yScale
+        );
     }
     public Image scale(double scale) {
         if (scale < 0) scale = 0;
@@ -189,6 +186,13 @@ public class Image {
         }
 
         return new Image(newPixels, width, height);
+    }
+
+    public Image toOriginal() {
+        pixels = originalPixels;
+        width = originalWidth;
+        height = originalHeight;
+        return this;
     }
 
     public int[] getPixels() {

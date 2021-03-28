@@ -29,6 +29,7 @@ public class Color {
     }
 
     public int colorToInt() {
+
         return ((int)(255 * alpha) << 24) & 0xFF000000
              | ((int)(255 * red)   << 16) & 0x00FF0000
              | ((int)(255 * green) << 8)  & 0x0000FF00
@@ -58,6 +59,12 @@ public class Color {
              | ((int)(255 * newGreen) << 8)  & 0x0000FF00
              |  (int)(255 * newBlue)         & 0x000000FF;
     }
+
+    @Override
+    public String toString() {
+        return "{ red: " + red +", green: "+ green +", blue: "+ blue +", alpha: "+ alpha +"}";
+    }
+
 
     public double getRed() {
         return red;

@@ -72,7 +72,7 @@ public class Point {
     }
 
     public double lengthSquared() {
-        return (double) x * x + y * y;
+        return x * x + y * y;
     }
 
     public double lengthSquared(Point point) {
@@ -82,8 +82,22 @@ public class Point {
     }
 
     @Override
-    public String toString() {
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
 
+        if (!(o instanceof Point)) {
+            return false;
+        }
+
+        Point c = (Point) o;
+
+        return Double.compare(x, c.getX()) == 0 && Double.compare(y, c.getY()) == 0;
+    }
+
+    @Override
+    public String toString() {
         return "{x: " + x + ", y: " + y + "}";
     }
 

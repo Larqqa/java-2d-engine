@@ -4,29 +4,29 @@ import engine.utilities.MinMax;
 import engine.utilities.Point;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class BezierCurve extends Shape {
 
     private static Point getPointOnLineAtPercentile(Point firstPoint, Point secondPoint, double percent) {
-        Point vector = new Point(secondPoint.getX() - firstPoint.getX(), secondPoint.getY() - firstPoint.getY());
+        Point vector = new Point(
+                secondPoint.getX() - firstPoint.getX(),
+                secondPoint.getY() - firstPoint.getY());
+
         Point unitVector = vector.toUnitVector();
 
         double length = vector.length();
         double lengthPercentile = length * percent;
 
-        double pointX = firstPoint.getX() + (unitVector.getX() * lengthPercentile);
-        double pointY = firstPoint.getY() + (unitVector.getY() * lengthPercentile);
-
-        return new Point(pointX, pointY);
+        return new Point(
+                firstPoint.getX() + (unitVector.getX() * lengthPercentile),
+                firstPoint.getY() + (unitVector.getY() * lengthPercentile));
     }
 
     private static Point plotBezierCurve(ArrayList<Point> points, double percent) {
         ArrayList<Point> newPoints = new ArrayList<>();
         for (int p = 0; p < points.size() - 1; p++) {
-            Point firstPoint = points.get(p);
-            Point secondPoint = points.get(p + 1);
-            newPoints.add(getPointOnLineAtPercentile(firstPoint, secondPoint, percent));
+            newPoints.add(getPointOnLineAtPercentile(points.get(p), points.get(p + 1), percent));
         }
 
         if (points.size() == 2) {
@@ -53,7 +53,7 @@ public class BezierCurve extends Shape {
         for (double t = 0; t <= 1.0 + precision; t += precision) {
             Point current = plotBezierCurve(points, t);
 
-            MinMax pointMinMax = new MinMax(new ArrayList<>(Arrays.asList(previous, current)), lineWidth);
+            MinMax pointMinMax = new MinMax(new ArrayList<>(List.of(previous, current)), lineWidth);
 
             combinePixels(
                     (int) pointMinMax.getMinX(), (int) pointMinMax.getMinY(),

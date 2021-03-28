@@ -2,15 +2,12 @@ package engine.visuals;
 
 import engine.controls.Keyboard;
 import engine.controls.Mouse;
-import engine.program.Engine;
 
 import javax.swing.JFrame;
 import java.awt.Canvas;
 import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.util.Objects;
 
 public class PixelCanvas extends Canvas {
 
@@ -45,19 +42,12 @@ public class PixelCanvas extends Canvas {
         mouseListener.decrementMouseWheel();
         Graphics g = null;
 
-        try {
-            g = this.getBufferStrategy().getDrawGraphics();
-
-            g.drawImage(
-                    image,
-                    0,0,
-                    (int)(window.getWidth() * window.getScale()),
-                    (int)(window.getHeight() * window.getScale()),
-                    null
-            );
-        } finally {
-            if (Objects.nonNull(g)) g.dispose();
-        }
+        g = this.getBufferStrategy().getDrawGraphics();
+        g.drawImage(image,0,0,
+            (int)(window.getWidth() * window.getScale()),
+            (int)(window.getHeight() * window.getScale()),
+            null);
+        g.dispose();
 
         this.getBufferStrategy().show();
     }

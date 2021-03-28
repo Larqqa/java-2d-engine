@@ -13,16 +13,11 @@ public final class Engine {
     }
 
     public static Engine getInstance(final Program program) {
-        if(Objects.isNull(instance)) {
-            instance = new Engine(program);
-        }
-
-        return instance;
+        return Objects.isNull(instance) ? new Engine(program): instance;
     }
 
     public static Engine getInstance() {
-        if(Objects.isNull(instance)) return null;
-        return instance;
+        return Objects.isNull(instance) ? null : instance;
     }
 
     public void start() {

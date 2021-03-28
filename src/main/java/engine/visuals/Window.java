@@ -14,46 +14,10 @@ public class Window implements WindowListener {
     private final int scaledHeight;
     private final int width;
     private final int height;
-    private final String title;
     private final double scale;
     public static int windowAmount = 0;
 
-    public static class Builder {
-
-        private String title = "LrqEngine";
-        private int width = 160;
-        private int height = 90;
-        private double scale = 2.0;
-
-        public Builder() {}
-
-        public Builder setTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder setWidth(int width) {
-            this.width = width;
-            return this;
-        }
-
-        public Builder setHeight(int height) {
-            this.height = height;
-            return this;
-        }
-
-        public Builder setScale(double scale) {
-            this.scale = scale;
-            return this;
-        }
-
-        public Window build() {
-            return new Window(title, width, height, scale);
-        }
-    }
-
     private Window(final String title, final int width, final int height, final double scale) {
-        this.title = title;
         this.width = width;
         this.height = height;
         this.scale = scale;
@@ -141,5 +105,39 @@ public class Window implements WindowListener {
 
     public double getScale() {
         return scale;
+    }
+
+    public static class Builder {
+
+        private String title = "LrqEngine";
+        private int width = 160;
+        private int height = 90;
+        private double scale = 2.0;
+
+        public Builder() {}
+
+        public Builder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder setWidth(int width) {
+            this.width = width;
+            return this;
+        }
+
+        public Builder setHeight(int height) {
+            this.height = height;
+            return this;
+        }
+
+        public Builder setScale(double scale) {
+            this.scale = scale;
+            return this;
+        }
+
+        public Window build() {
+            return new Window(title, width, height, scale);
+        }
     }
 }

@@ -4,15 +4,14 @@ import engine.utilities.MinMax;
 import engine.utilities.Point;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class Line extends Shape {
     // Brasenham's line algorithm
     // Draws squares of variable sizes to simulate bigger lines
     // https://www.youtube.com/watch?v=IDFB5CDpLDE&t=164s
     public static boolean[] plot(Point firstPoint, Point secondPoint, int lineWidth) {
-        ArrayList<Point> points = new ArrayList<>(
-                Arrays.asList(firstPoint, secondPoint));
+        ArrayList<Point> points = new ArrayList<>(List.of(firstPoint, secondPoint));
         MinMax minMax = new MinMax(points, lineWidth);
         points = normalizePoints(points, minMax);
         minMax = new MinMax(points, 0);

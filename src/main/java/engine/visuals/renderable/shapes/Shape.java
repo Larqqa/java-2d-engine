@@ -10,7 +10,7 @@ public abstract class Shape {
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
                 int p = (y + j) * wd + (x + i);
-                if (p > pixels.length - 1 || p < 0) continue;
+                if (p < 0 || p > pixels.length - 1) continue;
                 pixels[p] = true;
             }
         }
@@ -21,7 +21,9 @@ public abstract class Shape {
             int x = (i % shapeWidth);
             int y = (i / shapeWidth);
             if (shape[i]) {
-                target[(offsetY + y) * targetWidth + (offsetX + x)] = true;
+                int p = (offsetY + y) * targetWidth + (offsetX + x);
+                if (p < 0 || p > target.length - 1) continue;
+                target[p] = true;
             }
         }
     }
