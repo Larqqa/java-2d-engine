@@ -60,6 +60,9 @@ public class Renderer {
     }
 
     public void line(Point firstPoint, Point secondPoint, int lineWidth, Color color) {
+        firstPoint = new Point(Math.round(firstPoint.getX()), Math.round(firstPoint.getY()));
+        secondPoint = new Point(Math.round(secondPoint.getX()), Math.round(secondPoint.getY()));
+
         ArrayList<Point> points = new ArrayList<>(Arrays.asList(firstPoint, secondPoint));
         MinMax minMax = new MinMax(points, lineWidth);
         int halfWidth = lineWidth / 2;

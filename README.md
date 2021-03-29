@@ -1,23 +1,47 @@
-# WIP: A Java 2D Engine
+# LRQ Engine
 
-### This is a simple 2D pixel drawing engine.
+## This is a simple 2D pixel rendering engine.
 
-To use the engine:
-* Extend the abstract Program class.
-* Modify the settings with:
-    * `setTitle(String)`
-    * `setClearColor(uInt)`
-    * `setWidth(int)`
-    * `setHeight(int)`
-    * `setScale(double)`
-    * `setFrameCap(1.0 / double)`
-* `start()` the engine
-* Implement the abstract methods:
-    * `abstract public void update(Mouse mouse, Keyboard keyboard);`
-        * Update is run in "realtime"
-    * `abstract public void render(Renderer renderer);`
-        * Render is run "frameCap" times per second
-        
+Example Class on how to use the engine and draw a line on a canvas:
+```java
+public class Main extends Program {
+
+    private Window w;
+    private PixelCanvas p;
+    private Renderer r;
+
+    public Main() {
+        w = new Window.Builder()
+                .setWidth(300)
+                .setHeight(300)
+                .setScale(2)
+                .setTitle("Asteroids")
+                .build();
+
+        p = new PixelCanvas(w);
+        r = p.getRenderer();
+
+        setFrameCap(30);
+        start();
+    }
+
+    @Override
+    public void update() {
+    }
+
+    @Override
+    public void render() {
+        r.clear();
+        r.line(new Point(10,10), new Point(100,150), Colors.red());
+        p.paint();
+    }
+
+    public static void main(String[] args) {
+        new Main();
+    }
+}
+```
+
 Currently implemented:
 * 2D Point:
     * XY location as double

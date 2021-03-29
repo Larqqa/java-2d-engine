@@ -85,15 +85,17 @@ public class PseudoProgram extends Program {
 
 //        p.getRenderer().rectangle(mouse, 20, 20,Colors.blue());
 
-        ArrayList<Point> pl = new ArrayList<>();
-        pl.add(new Point(50,50));
-        pl.add(new Point(100,70));
-        pl.add(new Point(100,70));
-        pl.add(new Point(150,50));
+//        ArrayList<Point> pl = new ArrayList<>();
+//        pl.add(new Point(50,50));
+//        pl.add(new Point(100,70));
+//        pl.add(new Point(100,70));
+//        pl.add(new Point(150,50));
+//
+//        p.getRenderer().bezierLine(pl, Colors.blue());
 
-        p.getRenderer().bezierLine(pl, Colors.blue());
-
+//        p.getRenderer().line(new Point(50.824858252855,100.5434382548), new Point(100.2885258582582, 77.782486324), Colors.blue());
+//        p.getRenderer().line(new Point(51,101), new Point(100, 78), Colors.blue());
         p.paint();
-//        stop();
+        stop();
     }
 }

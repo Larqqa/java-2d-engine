@@ -1,6 +1,14 @@
 package engine.utilities;
 
 public class Colors {
+    public static Color black() {
+        return new Color(0.0,0.0,0.0);
+    }
+    public static Color white() {
+        return new Color(1.0,1.0,1.0);
+    }
+
+
     public static Color red() {
         return new Color(1.0,0.0,0.0);
     }
@@ -10,6 +18,7 @@ public class Colors {
     public static Color darkRed() {
         return new Color(0.6,0.0,0.0);
     }
+
     public static Color green() {
         return new Color(0.0,0.55,0.0);
     }
